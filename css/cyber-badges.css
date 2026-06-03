@@ -1,0 +1,86 @@
+/**
+ * Cyberpunk VIP / FREE badges — neon glow + glitch shake
+ * Khang Huynh Cloud — Admin + Client Portal
+ */
+
+@keyframes cyber-shake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-0.5px, 0.5px) rotate(-0.5deg); }
+  40% { transform: translate(-0.5px, -0.5px) rotate(0.5deg); }
+  60% { transform: translate(0.5px, 0.5px) rotate(0deg); }
+  80% { transform: translate(0.5px, -0.5px) rotate(-0.5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* —— VIP: đỏ neon —— */
+.badge-vip,
+.badge-vip-gold,
+.file-badge-vip {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #ff0055;
+  background: rgba(255, 0, 85, 0.12);
+  border: 1px solid rgba(255, 0, 85, 0.65);
+  text-shadow: 0 0 8px rgba(255, 0, 85, 0.85);
+  box-shadow: 0 0 10px #ff0055;
+  animation: cyber-shake 0.8s infinite;
+}
+
+/* —— FREE: cyan neon —— */
+.badge-free,
+.badge-free-silver,
+.file-badge-free {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #00f0ff;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.6);
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
+  box-shadow: 0 0 10px #00f0ff;
+  animation: cyber-shake 0.8s infinite;
+}
+
+/* Portal header badges (lớn hơn file badge) */
+.badge-vip-gold,
+.badge-free-silver {
+  padding: 0.35rem 1rem;
+  font-size: 0.75rem;
+  border-radius: 9999px;
+}
+
+/* PRO — giữ wiggle đỏ (không shake VIP/FREE) */
+.file-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.25rem;
+  margin-right: 0.35rem;
+  vertical-align: middle;
+}
+
+.file-badge-pro,
+.badge-pro-wiggle {
+  display: inline-block;
+  color: #ef4444;
+  font-weight: 800;
+  text-transform: uppercase;
+  border: 1px solid rgba(239, 68, 68, 0.6);
+  background: rgba(239, 68, 68, 0.1);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.35);
+  animation: pro-wiggle 0.45s ease-in-out infinite;
+}
+
+@keyframes pro-wiggle {
+  0%, 100% { transform: rotate(-2deg) scale(1); }
+  50% { transform: rotate(2deg) scale(1.08); }
+}

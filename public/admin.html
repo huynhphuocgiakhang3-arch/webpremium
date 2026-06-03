@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Cyber Key Control</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/cyber-badges.css">
+  <style>
+    @keyframes expiry-flash {
+      0%, 100% { background: transparent; color: #a1a1aa; }
+      20% { background: rgba(52, 211, 153, 0.35); color: #6ee7b7; text-shadow: 0 0 14px rgba(52, 211, 153, 0.9); }
+      45% { background: rgba(34, 211, 238, 0.3); color: #67e8f9; text-shadow: 0 0 16px rgba(34, 211, 238, 0.85); }
+      70% { background: rgba(52, 211, 153, 0.2); color: #a7f3d0; }
+    }
+    .expiry-flash {
+      animation: expiry-flash 1.25s ease-out;
+      border-radius: 4px;
+      padding: 2px 4px;
+      display: inline-block;
+    }
+    .btn-extend-1 {
+      border-color: rgba(52, 211, 153, 0.65);
+      color: #6ee7b7;
+      box-shadow: 0 0 8px rgba(52, 211, 153, 0.2);
+    }
+    .btn-extend-1:hover { background: rgba(52, 211, 153, 0.12); box-shadow: 0 0 14px rgba(52, 211, 153, 0.45); }
+    .btn-extend-30 {
+      border-color: rgba(34, 211, 238, 0.65);
+      color: #67e8f9;
+      box-shadow: 0 0 8px rgba(34, 211, 238, 0.2);
+    }
+    .btn-extend-30:hover { background: rgba(34, 211, 238, 0.12); box-shadow: 0 0 14px rgba(34, 211, 238, 0.45); }
+    .btn-delete-file {
+      border: 1px solid rgba(244, 63, 94, 0.65);
+      color: #fb7185;
+      box-shadow: 0 0 10px rgba(244, 63, 94, 0.2);
+      transition: all 0.2s ease;
+    }
+    .btn-delete-file:hover {
+      background: rgba(244, 63, 94, 0.15);
+      box-shadow: 0 0 16px rgba(244, 63, 94, 0.45);
+      color: #fff;
+    }
+    tr.file-row-removing {
+      opacity: 0;
+      transform: translateX(8px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .btn-add-config {
+      border: 1px solid rgba(0, 240, 255, 0.7);
+      color: #00f0ff;
+      background: rgba(0, 240, 255, 0.1);
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.35);
+      transition: all 0.25s ease;
+    }
+    .btn-add-config:hover {
+      background: rgba(0, 240, 255, 0.2);
+      box-shadow: 0 0 22px rgba(0, 240, 255, 0.55);
+      color: #fff;
+    }
+    .btn-edit-file {
+      border: 1px solid rgba(34, 211, 238, 0.65);
+      color: #22d3ee;
+      box-shadow: 0 0 10px rgba(34, 211, 238, 0.25);
+      transition: all 0.2s ease;
+    }
+    .btn-edit-file:hover {
+      background: rgba(34, 211, 238, 0.12);
+      box-shadow: 0 0 16px rgba(34, 211, 238, 0.45);
+      color: #fff;
+    }
+    .sf-modal-backdrop {
+      background: rgba(5, 8, 16, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .sf-modal-panel {
+      background: linear-gradient(145deg, rgba(14, 20, 42, 0.92), rgba(8, 12, 28, 0.96));
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.12), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .system-files-table-wrap {
+      overflow: auto;
+      max-height: min(70vh, 520px);
+      -webkit-overflow-scrolling: touch;
+    }
+    .system-files-table {
+      min-width: 640px;
+    }
+    .system-files-table th.col-actions,
+    .system-files-table td.col-actions {
+      position: sticky;
+      right: 0;
+      z-index: 2;
+      min-width: 108px;
+      background: rgb(24 24 27);
+      box-shadow: -8px 0 12px rgba(0, 0, 0, 0.35);
+    }
+    .system-files-table thead th.col-actions {
+      background: rgb(24 24 27);
+    }
+    .system-files-table tbody tr:hover td.col-actions {
+      background: rgb(24 24 27 / 0.95);
+    }
+    .admin-split-col {
+      border: 1px solid rgba(0, 240, 255, 0.12);
+      background: rgba(9, 12, 24, 0.65);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      min-height: 320px;
+    }
+    .admin-split-col.cheathack-col {
+      border-color: rgba(217, 70, 239, 0.2);
+      box-shadow: inset 0 0 24px rgba(217, 70, 239, 0.04);
+    }
+    .admin-split-col.system-col {
+      border-color: rgba(34, 211, 238, 0.15);
+      box-shadow: inset 0 0 24px rgba(34, 211, 238, 0.04);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#050810] text-zinc-100 antialiased" style="background-image:linear-gradient(rgba(0,245,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,0.03) 1px,transparent 1px);background-size:48px 48px">
+  <div id="lockScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/95 backdrop-blur-sm">
+    <div class="w-full max-w-md mx-4 rounded-2xl border border-cyan-500/30 bg-zinc-900 p-8 shadow-2xl shadow-cyan-500/10">
+      <h1 class="text-xl font-bold text-center text-cyan-400 mb-2">Hệ thống Quản trị</h1>
+      <p class="text-sm text-zinc-400 text-center mb-6">Nhập mật khẩu để mở khóa hệ thống</p>
+      <input id="adminPassword" type="password" placeholder="Mật khẩu admin"
+        class="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm focus:border-cyan-500 focus:outline-none" disabled />
+      <p id="lockError" class="mt-2 text-sm text-red-400 hidden"></p>
+      <p id="lockDbStatus" class="mt-2 text-sm text-red-400">Đang kiểm tra kết nối Database...</p>
+      <button id="unlockBtn" type="button" disabled
+        class="mt-4 w-full rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 py-3 text-sm font-semibold opacity-70 hover:opacity-100">
+        Mở khóa
+      </button>
+    </div>
+  </div>
+
+  <div id="mainApp" class="hidden">
+    <nav class="border-b border-zinc-800 bg-zinc-900/80 backdrop-blur sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-lg font-bold bg-gradient-to-r from-cyan-400 to-amber-300 bg-clip-text text-transparent">
+            Key & Bản quyền PHP
+          </span>
+          <p class="text-xs text-zinc-500 mt-0.5">Tích hợp activate.php local</p>
+          <p id="dbStatusBadge" class="text-xs mt-1 text-zinc-500">Database: đang kiểm tra...</p>
+        </div>
+        <div class="flex gap-2">
+          <button data-tab="keys" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium bg-cyan-600/20 text-cyan-300 border border-cyan-500/40">Quản lý Key</button>
+          <button data-tab="config" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:bg-zinc-800 border border-transparent">Cấu hình</button>
+          <button data-tab="logs" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:bg-zinc-800 border border-transparent">Lịch sử</button>
+        </div>
+        <button id="logoutBtn" class="text-sm text-zinc-500 hover:text-red-400">Đăng xuất</button>
+      </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+      <section id="panel-keys" class="tab-panel">
+        
+        <!-- Dashboard Thống Kê & Doanh Thu -->
+        <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 flex flex-col justify-between">
+            <h3 class="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">Tổng số Key hệ thống</h3>
+            <div class="text-3xl font-bold text-cyan-400 font-mono" id="statTotalKeys">0</div>
+          </div>
+          <div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 flex flex-col justify-between">
+            <h3 class="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">Key VIP Đang Hoạt Động</h3>
+            <div class="text-3xl font-bold text-amber-400 font-mono" id="statVipKeys">0</div>
+          </div>
+          <div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 flex flex-col h-[180px] sm:h-[140px] md:h-[135px] xl:h-[150px] relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-900/90 pointer-events-none z-10 top-2/3"></div>
+            <h3 class="text-[11px] font-semibold text-emerald-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+              NHẬT KÝ TRUY CẬP (LIVE_IP)
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+            </h3>
+            <div id="liveIpLogContainer" class="flex-1 overflow-y-auto space-y-2 pr-1 font-mono text-[10px] text-zinc-400 pb-8 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+              <!-- JS Logs go here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Form tạo Key nâng cấp -->
+        <div class="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/60 p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-sm font-semibold text-cyan-400">Tạo Key mới</h2>
+            <button id="cleanupKeysBtn" class="rounded-lg border border-red-500/50 text-red-400 px-3 py-1.5 text-xs font-semibold hover:bg-red-500/10 transition flex items-center gap-2">
+              <i class="fa-solid fa-broom"></i> Dọn Dẹp Key Hết Hạn
+            </button>
+          </div>
+          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div class="md:col-span-2">
+              <label class="block text-xs text-zinc-500 mb-1">Tự đặt tên Key (Để trống nếu muốn tự động sinh mã ngẫu nhiên)</label>
+              <input id="customKeyName" type="text" placeholder="VD: KieuAnhFree, VipPro999"
+                class="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm font-mono focus:border-cyan-500 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs text-zinc-500 mb-1">Loại bản quyền</label>
+              <select id="keyTypeSelect" class="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm">
+                <option value="VIP">VIP</option>
+                <option value="FREE">FREE</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-zinc-500 mb-1">Thời hạn</label>
+              <select id="durationSelect" class="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm">
+                <option value="1">1 ngày</option>
+                <option value="15">15 ngày</option>
+                <option value="30" selected>30 ngày</option>
+                <option value="365">365 ngày</option>
+              </select>
+            </div>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <button id="generateKeyBtn" class="rounded-lg bg-emerald-600 hover:bg-emerald-500 px-5 py-2 text-sm font-semibold">
+              Tạo Key
+            </button>
+            <button id="refreshKeysBtn" class="rounded-lg border border-zinc-600 px-4 py-2 text-sm hover:bg-zinc-800">Làm mới</button>
+          </div>
+          <p id="generateMsg" class="mt-2 text-sm hidden"></p>
+        </div>
+
+        <!-- Bộ lọc & Danh sách Key -->
+        <div class="mb-4 flex flex-wrap gap-4 items-center justify-between">
+          <div class="flex-1 min-w-[200px]">
+            <input type="text" id="searchKeyInput" placeholder="Tìm kiếm Key, IP, Ghi chú..." class="w-full rounded-lg border border-zinc-700 bg-zinc-900/80 px-4 py-2 text-sm focus:border-cyan-500 focus:outline-none">
+          </div>
+          <div class="flex gap-2">
+            <button data-filter="all" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-600/20 text-cyan-300 border border-cyan-500/40">Tất cả</button>
+            <button data-filter="vip" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:bg-zinc-800 border border-transparent">VIP</button>
+            <button data-filter="expired" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:bg-zinc-800 border border-transparent">Hết hạn</button>
+            <button data-filter="inactive" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:bg-zinc-800 border border-transparent">Chưa KH</button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-zinc-800">
+          <table class="w-full text-sm">
+            <thead class="bg-zinc-900 text-zinc-400 text-left">
+              <tr>
+                <th class="p-3">Key</th>
+                <th class="p-3">Loại Key</th>
+                <th class="p-3">Gói</th>
+                <th class="p-3">Trạng thái</th>
+                <th class="p-3">IP</th>
+                <th class="p-3">Online</th>
+                <th class="p-3">Kích hoạt</th>
+                <th class="p-3">Hết hạn</th>
+                <th class="p-3">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="keysTableBody" class="divide-y divide-zinc-800"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="panel-config" class="tab-panel hidden max-w-[96rem] w-full">
+        <h2 class="text-lg font-semibold mb-4 text-cyan-400">Cấu hình hệ thống</h2>
+
+        <div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 mb-6">
+          <h3 class="text-sm font-semibold text-zinc-300 mb-3">Link tải phần mềm (legacy)</h3>
+          <label class="block text-xs text-zinc-500 mb-1">Tiêu đề</label>
+          <input id="downloadTitle" class="w-full mb-3 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm" />
+          <label class="block text-xs text-zinc-500 mb-1">Link tải</label>
+          <input id="downloadLink" class="w-full mb-3 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm" />
+          <button id="saveConfigBtn" class="rounded-lg bg-cyan-600 hover:bg-cyan-500 px-5 py-2 text-sm font-semibold">Lưu cấu hình</button>
+          <p id="configMsg" class="mt-2 text-sm text-emerald-400 hidden"></p>
+        </div>
+
+        <p id="sfMsg" class="mb-3 text-sm hidden"></p>
+
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          <!-- Cột trái: Tinh chỉnh hệ thống -->
+          <div class="admin-split-col system-col">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <h3 class="text-sm font-semibold text-cyan-300">Quản lý Tinh chỉnh hệ thống</h3>
+              <button type="button" id="openAddSystemFileModalBtn" class="btn-add-config rounded-lg px-3 py-1.5 text-xs font-bold shrink-0">
+                <i class="fa-solid fa-plus mr-1"></i> Thêm Cấu Hình Hệ Thống
+              </button>
+            </div>
+            <div class="system-files-table-wrap rounded-lg border border-zinc-800">
+              <table class="system-files-table w-full text-sm">
+                <thead class="bg-zinc-900 text-zinc-400 text-left sticky top-0 z-[3]">
+                  <tr>
+                    <th class="p-2 min-w-[160px]">Tên</th>
+                    <th class="p-2">Nhãn</th>
+                    <th class="p-2 whitespace-nowrap">Ngày</th>
+                    <th class="p-2 col-actions">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="systemFilesTableBody" class="divide-y divide-zinc-800"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Cột phải: CheatHack PMT3 -->
+          <div class="admin-split-col cheathack-col">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <h3 class="text-sm font-semibold text-fuchsia-300">Quản lý CheatHack - Pmt3</h3>
+              <button type="button" id="openAddCheathackModalBtn" class="rounded-lg px-3 py-1.5 text-xs font-bold shrink-0 border border-fuchsia-500/60 text-fuchsia-300 bg-fuchsia-500/10 shadow-[0_0_14px_rgba(217,70,239,0.25)] hover:bg-fuchsia-500/20">
+                <i class="fa-solid fa-plus mr-1"></i> Thêm CheatHack Mới
+              </button>
+            </div>
+            <div class="system-files-table-wrap rounded-lg border border-zinc-800">
+              <table class="system-files-table w-full text-sm">
+                <thead class="bg-zinc-900 text-zinc-400 text-left sticky top-0 z-[3]">
+                  <tr>
+                    <th class="p-2 min-w-[160px]">Tên</th>
+                    <th class="p-2">Nhãn</th>
+                    <th class="p-2 whitespace-nowrap">Ngày</th>
+                    <th class="p-2 col-actions">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="cheathackTableBody" class="divide-y divide-zinc-800"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-logs" class="tab-panel hidden">
+        <div class="overflow-x-auto rounded-xl border border-zinc-800">
+          <table class="w-full text-sm">
+            <thead class="bg-zinc-900 text-zinc-400 text-left">
+              <tr>
+                <th class="p-3">Thời gian</th>
+                <th class="p-3">Key</th>
+                <th class="p-3">IP</th>
+                <th class="p-3">Kết quả</th>
+              </tr>
+            </thead>
+            <tbody id="logsTableBody" class="divide-y divide-zinc-800"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal Thêm / Sửa file (Glassmorphism) -->
+  <div id="sfModal" class="fixed inset-0 z-[60] hidden sf-modal-backdrop flex items-center justify-center p-4" aria-hidden="true">
+    <div class="sf-modal-panel w-full max-w-lg rounded-2xl p-6 relative" role="dialog" aria-labelledby="sfModalTitle">
+      <button type="button" id="sfModalCloseBtn" class="absolute top-3 right-3 text-zinc-500 hover:text-cyan-400 text-xl leading-none" aria-label="Đóng">&times;</button>
+      <h3 id="sfModalTitle" class="text-lg font-bold text-cyan-400 mb-4">Thêm cấu hình mới</h3>
+      <input type="hidden" id="sfEditId" value="" />
+      <input type="hidden" id="sfCategory" value="system" />
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div class="sm:col-span-2">
+          <label class="block text-xs text-zinc-500 mb-1">Tên file</label>
+          <input id="sfFileName" class="w-full rounded-lg border border-zinc-700 bg-zinc-950/80 px-3 py-2 text-sm" placeholder="VD: Android Root Config v2" />
+        </div>
+        <div class="sm:col-span-2">
+          <label class="block text-xs text-zinc-500 mb-1">Mô tả</label>
+          <input id="sfDescription" class="w-full rounded-lg border border-zinc-700 bg-zinc-950/80 px-3 py-2 text-sm" placeholder="Mô tả ngắn..." />
+        </div>
+        <div>
+          <label class="block text-xs text-zinc-500 mb-1">Loại nhãn</label>
+          <select id="sfBadgeType" class="w-full rounded-lg border border-zinc-700 bg-zinc-950/80 px-3 py-2 text-sm">
+            <option value="NONE">Không nhãn</option>
+            <option value="FREE">FREE</option>
+            <option value="VIP">VIP</option>
+            <option value="PRO">PRO</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs text-zinc-500 mb-1">Ngày upload</label>
+          <input id="sfUploadDate" class="w-full rounded-lg border border-zinc-700 bg-zinc-950/80 px-3 py-2 text-sm" placeholder="31/05/2026" />
+        </div>
+        <div class="sm:col-span-2">
+          <label class="block text-xs text-zinc-500 mb-1">Link Download</label>
+          <input id="sfDownloadLink" class="w-full rounded-lg border border-zinc-700 bg-zinc-950/80 px-3 py-2 text-sm font-mono" placeholder="https://..." />
+        </div>
+      </div>
+      <div class="mt-5 flex gap-2 justify-end">
+        <button type="button" id="sfModalCancelBtn" class="rounded-lg border border-zinc-600 px-4 py-2 text-sm text-zinc-400 hover:bg-zinc-800">Hủy</button>
+        <button type="button" id="sfModalSaveBtn" class="rounded-lg bg-cyan-600 hover:bg-cyan-500 px-5 py-2 text-sm font-semibold text-white shadow-[0_0_16px_rgba(34,211,238,0.35)]">
+          <i class="fa-solid fa-floppy-disk mr-1"></i> Lưu thay đổi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = '/api/admin';
+    const FILES_API = '/api/files';
+    const CHEATHACK_API = '/api/cheathack';
+    let adminToken = localStorage.getItem('adminToken') || '';
+    let sfModalCategory = 'system';
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function fmtVN(dateStr) {
+      if (!dateStr) return '—';
+      return new Date(dateStr).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
+    }
+
+    function statusBadge(status) {
+      if (status === 'active') return '<span class="px-2 py-0.5 rounded-full text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/50">Active</span>';
+      return '<span class="px-2 py-0.5 rounded-full text-xs bg-red-500/20 text-red-400 border border-red-500/50">Banned</span>';
+    }
+
+    function keyTypeBadge(type) {
+      if (type === 'FREE') {
+        return '<span class="badge-free">FREE</span>';
+      }
+      return '<span class="badge-vip">VIP</span>';
+    }
+
+    function systemFileBadge(type) {
+      const t = String(type || 'NONE').toUpperCase();
+      if (t === 'FREE') return '<span class="badge-free">FREE</span>';
+      if (t === 'VIP') return '<span class="badge-vip">VIP</span>';
+      if (t === 'PRO') return '<span class="file-badge file-badge-pro badge-pro-wiggle">PRO</span>';
+      return `<span class="text-zinc-500 text-xs">${escapeHtml(t)}</span>`;
+    }
+
+    function logBadge(status) {
+      const map = {
+        success: ['Thành công', 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50'],
+        failed_ip: ['Sai IP', 'bg-orange-500/20 text-orange-400 border-orange-500/50'],
+        failed_expired: ['Hết hạn', 'bg-red-500/20 text-red-400 border-red-500/50'],
+        failed_banned: ['Banned', 'bg-red-500/20 text-red-400 border-red-500/50'],
+        invalid_key: ['Key sai', 'bg-red-500/20 text-red-400 border-red-500/50'],
+      };
+      const [label, cls] = map[status] || [status, 'bg-zinc-700 text-zinc-300'];
+      return `<span class="px-2 py-0.5 rounded-full text-xs border ${cls}">${label}</span>`;
+    }
+
+    async function api(path, options = {}) {
+      const headers = { 'Content-Type': 'application/json', ...options.headers };
+      if (adminToken) headers.Authorization = `Bearer ${adminToken}`;
+      const res = await fetch(API + path, { ...options, headers, credentials: 'include' });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || 'Lỗi API');
+      return data;
+    }
+
+    function getFilesApiBase(category) {
+      return category === 'cheathack' ? CHEATHACK_API : FILES_API;
+    }
+
+    /** API File — GET/POST /api/files hoặc /api/cheathack */
+    async function filesApi(pathOrOptions = '', options = {}, category = sfModalCategory) {
+      let path = '';
+      let opts = options;
+      if (typeof pathOrOptions === 'string') {
+        path = pathOrOptions;
+      } else {
+        opts = pathOrOptions || {};
+        if (typeof options === 'string') category = options;
+      }
+      const headers = { 'Content-Type': 'application/json', ...opts.headers };
+      if (adminToken) headers.Authorization = `Bearer ${adminToken}`;
+
+      const bases = category === 'cheathack' ? [CHEATHACK_API] : [FILES_API, API + '/files'];
+      let lastErr = null;
+
+      for (const base of bases) {
+        const url = path ? `${base}/${path.replace(/^\//, '')}` : base;
+        const res = await fetch(url, { ...opts, headers, credentials: 'include' });
+        const data = await res.json().catch(() => ({}));
+
+        if (res.status === 503) {
+          throw new Error(
+            data.message ||
+              'Database chưa kết nối — chạy CHAY_HE_THONG.bat và đợi [DB] ket noi thanh cong'
+          );
+        }
+        if (res.status === 404 && bases.indexOf(base) < bases.length - 1) {
+          lastErr = new Error(data.message || 'Không tìm thấy tài nguyên');
+          continue;
+        }
+        if (!res.ok) {
+          throw new Error(data.message || 'Lỗi API file');
+        }
+        return data;
+      }
+
+      throw lastErr || new Error('Không kết nối được API file — hãy chạy CHAY_HE_THONG.bat');
+    }
+
+    async function deleteSystemFileById(fileId, category = 'system') {
+      const base = getFilesApiBase(category);
+      const headers = {};
+      if (adminToken) headers.Authorization = `Bearer ${adminToken}`;
+
+      let res = await fetch(`${base}/${encodeURIComponent(fileId)}`, {
+        method: 'DELETE',
+        headers,
+        credentials: 'include',
+      });
+      if (res.status === 404) {
+        res = await fetch(`${base}/delete`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...headers },
+          credentials: 'include',
+          body: JSON.stringify({ id: fileId }),
+        });
+      }
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 503) {
+        throw new Error(data.message || 'Database chưa kết nối');
+      }
+      if (!res.ok) {
+        throw new Error(data.message || 'Xóa file thất bại');
+      }
+      return data;
+    }
+
+    function getSystemFileFormPayload() {
+      return {
+        fileName: document.getElementById('sfFileName').value.trim(),
+        description: document.getElementById('sfDescription').value.trim(),
+        badgeType: document.getElementById('sfBadgeType').value,
+        uploadDate: document.getElementById('sfUploadDate').value.trim(),
+        downloadLink: document.getElementById('sfDownloadLink').value.trim(),
+      };
+    }
+
+    function clearSystemFileForm() {
+      document.getElementById('sfEditId').value = '';
+      document.getElementById('sfFileName').value = '';
+      document.getElementById('sfDescription').value = '';
+      document.getElementById('sfUploadDate').value = '';
+      document.getElementById('sfDownloadLink').value = '';
+      document.getElementById('sfBadgeType').value = 'NONE';
+    }
+
+    function openSfModal(mode, file, category = 'system') {
+      sfModalCategory = category;
+      document.getElementById('sfCategory').value = category;
+      const modal = document.getElementById('sfModal');
+      const title = document.getElementById('sfModalTitle');
+      const saveBtn = document.getElementById('sfModalSaveBtn');
+      clearSystemFileForm();
+      document.getElementById('sfCategory').value = category;
+      if (mode === 'edit' && file) {
+        document.getElementById('sfEditId').value = file._id || file.id || '';
+        document.getElementById('sfFileName').value = file.fileName || '';
+        document.getElementById('sfDescription').value = file.description || '';
+        document.getElementById('sfBadgeType').value = file.badgeType || 'NONE';
+        document.getElementById('sfUploadDate').value = file.uploadDate || '';
+        document.getElementById('sfDownloadLink').value = file.downloadLink || '';
+        title.textContent = category === 'cheathack' ? 'Chỉnh sửa CheatHack' : 'Chỉnh sửa cấu hình hệ thống';
+        saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i> Lưu thay đổi';
+      } else {
+        title.textContent = category === 'cheathack' ? 'Thêm CheatHack mới' : 'Thêm cấu hình hệ thống';
+        saveBtn.innerHTML = '<i class="fa-solid fa-plus mr-1"></i> Thêm mới';
+      }
+      modal.classList.remove('hidden');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeSfModal() {
+      const modal = document.getElementById('sfModal');
+      modal.classList.add('hidden');
+      modal.setAttribute('aria-hidden', 'true');
+      clearSystemFileForm();
+    }
+
+    function readFileFromRow(row) {
+      return {
+        _id: row.dataset.fileId,
+        fileName: row.dataset.fileName || '',
+        description: row.dataset.fileDescription || '',
+        badgeType: row.dataset.fileBadge || 'NONE',
+        uploadDate: row.dataset.fileUploadDate || '',
+        downloadLink: row.dataset.fileDownloadLink || '',
+      };
+    }
+
+    function showSfToast(message, isError) {
+      const msgEl = document.getElementById('sfMsg');
+      if (!msgEl) return;
+      msgEl.textContent = message;
+      msgEl.className = isError ? 'mb-3 text-sm text-red-400' : 'mb-3 text-sm text-emerald-400';
+      msgEl.classList.remove('hidden');
+      setTimeout(() => msgEl.classList.add('hidden'), 2800);
+    }
+
+    function renderSystemFileRows(files) {
+      const tbody = document.getElementById('systemFilesTableBody');
+      if (!tbody) return;
+      if (!files.length) {
+        showFilesEmptyState();
+        return;
+      }
+      tbody.innerHTML = files.map(renderSystemFileRow).join('');
+    }
+
+    function renderSystemFileRow(f) {
+      const id = f._id || f.id;
+      return `
+        <tr class="hover:bg-zinc-900/50 file-data-row"
+          data-file-id="${id}"
+          data-file-name="${escapeHtml(f.fileName || '')}"
+          data-file-description="${escapeHtml(f.description || '')}"
+          data-file-badge="${escapeHtml(f.badgeType || 'NONE')}"
+          data-file-upload-date="${escapeHtml(f.uploadDate || '')}"
+          data-file-download-link="${escapeHtml(f.downloadLink || '')}">
+          <td class="p-2 text-xs text-cyan-200 max-w-[200px]" title="${escapeHtml(f.fileName)}">
+            <div class="font-medium truncate">${escapeHtml(f.fileName)}</div>
+            <div class="text-zinc-500 truncate mt-0.5">${escapeHtml(f.description || '')}</div>
+          </td>
+          <td class="p-2 text-xs">
+            <label class="inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer toggle-badge-btn" data-id="${id}" ${f.badgeType === 'VIP' ? 'checked' : ''}>
+              <div class="relative w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+              <span class="ms-2 text-xs font-medium ${f.badgeType === 'VIP' ? 'text-amber-400' : 'text-zinc-400'} toggle-badge-label">${f.badgeType === 'VIP' ? 'VIP' : 'FREE'}</span>
+            </label>
+          </td>
+          <td class="p-2 text-xs whitespace-nowrap">${escapeHtml(f.uploadDate || '—')}</td>
+          <td class="p-2 col-actions whitespace-nowrap">
+            <button type="button" data-sf-edit="${id}" class="btn-edit-file px-2.5 py-1.5 text-xs rounded inline-flex items-center gap-1 mr-1" title="Sửa">
+              <i class="fa-solid fa-edit"></i>
+            </button>
+            <button type="button" data-sf-delete="${id}" class="btn-delete-file px-2.5 py-1.5 text-xs rounded inline-flex items-center gap-1" title="Xóa">
+              <i class="fa-solid fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>`;
+    }
+
+    function showFilesEmptyState(tbodyId, label) {
+      const tbody = document.getElementById(tbodyId);
+      if (!tbody) return;
+      tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-zinc-500 text-xs">Chưa có file — ${label}</td></tr>`;
+    }
+
+    function showFilesError(message) {
+      const tbody = document.getElementById('systemFilesTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-amber-400 text-xs">${escapeHtml(message)}</td></tr>`;
+    }
+
+    function showApp() {
+      document.getElementById('lockScreen').classList.add('hidden');
+      document.getElementById('mainApp').classList.remove('hidden');
+      loadKeys();
+      loadConfig();
+      loadSystemFiles();
+      loadCheathackFiles();
+    }
+
+    async function unlock() {
+      const password = document.getElementById('adminPassword').value;
+      const errEl = document.getElementById('lockError');
+      errEl.classList.add('hidden');
+      try {
+        const res = await fetch(API + '/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ password }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        adminToken = data.token;
+        localStorage.setItem('adminToken', adminToken);
+        showApp();
+      } catch (e) {
+        errEl.textContent = e.message;
+        errEl.classList.remove('hidden');
+      }
+    }
+
+    async function checkSession() {
+      if (!adminToken) return;
+      try {
+        await api('/keys');
+        showApp();
+      } catch {
+        adminToken = '';
+        localStorage.removeItem('adminToken');
+      }
+    }
+
+    async function loadKeys() {
+      const data = await api('/keys');
+      document.getElementById('keysTableBody').innerHTML = data.keys.map((k) => `
+        <tr class="hover:bg-zinc-900/50" data-key-id="${k._id}">
+          <td class="p-3">
+            <div class="font-mono text-cyan-300">${k.keyString}</div>
+            <label class="block text-[10px] text-zinc-500 mt-1.5 uppercase tracking-wide">Ghi chú Khách hàng</label>
+            <input type="text" data-note-for="${k._id}" value="${escapeHtml(k.adminNote || '')}"
+              placeholder="VD: Zalo 077..., gói VIP tháng 5..."
+              class="mt-0.5 w-full max-w-[220px] rounded border border-zinc-700/80 bg-zinc-950/60 px-2 py-1 text-[11px] text-zinc-300 focus:border-amber-500/50 focus:outline-none" />
+          </td>
+          <td class="p-3">${keyTypeBadge(k.keyType || 'VIP')}</td>
+          <td class="p-3">${k.durationDays} ngày</td>
+          <td class="p-3">${statusBadge(k.status)}</td>
+          <td class="p-3 font-mono text-xs">${k.boundIP || '—'}</td>
+          <td class="p-3">${k.isLoggedIn ? '<span class="text-emerald-400"><i class="fa-solid fa-circle text-[8px]"></i> Online</span>' : '<span class="text-zinc-600">Offline</span>'}</td>
+          <td class="p-3">${k.isActivated ? '<span class="text-emerald-400">Đã KH</span>' : '<span class="text-zinc-500">Chưa</span>'}</td>
+          <td class="p-3 text-xs">
+            <span class="expiry-cell" data-expiry-for="${k._id}">${fmtVN(k.expiredAt)}</span>
+          </td>
+          <td class="p-3 flex flex-wrap gap-1 items-center">
+            <button data-action="extend" data-id="${k._id}" data-days="1" title="Cộng 1 ngày"
+              class="btn-extend-1 px-2 py-1 text-xs rounded border transition"><i class="fa-solid fa-plus-circle"></i> +1 Ngày</button>
+            <button data-action="extend" data-id="${k._id}" data-days="30" title="Cộng 30 ngày"
+              class="btn-extend-30 px-2 py-1 text-xs rounded border transition"><i class="fa-solid fa-calendar-plus"></i> +30 Ngày</button>
+            <button data-action="kick" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-red-500/60 text-red-400 hover:bg-red-500/10"><i class="fa-solid fa-user-slash"></i> Kick</button>
+            <button data-action="toggle" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-amber-500/50 text-amber-400">Ban/Unban</button>
+            <button data-action="reset" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-blue-500/50 text-blue-400">Reset IP</button>
+            <button data-action="delete" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-red-500/50 text-red-400">Xóa</button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Update Dashboard Stats
+      const total = data.keys.length;
+      const vipActive = data.keys.filter(k => k.keyType === 'VIP' && k.status === 'active' && (!k.expiredAt || new Date(k.expiredAt).getTime() > Date.now())).length;
+      document.getElementById('statTotalKeys').textContent = total;
+      document.getElementById('statVipKeys').textContent = vipActive;
+
+      // Filter Logic
+      allKeysData = data.keys; 
+      applyFilterAndSearch();
+    }
+
+    let allKeysData = [];
+    let currentFilter = 'all';
+
+    function applyFilterAndSearch() {
+      const search = document.getElementById('searchKeyInput')?.value.toLowerCase() || '';
+      const now = Date.now();
+      
+      const filtered = allKeysData.filter(k => {
+        // Search
+        const searchStr = `${k.keyString} ${k.boundIP || ''} ${k.adminNote || ''}`.toLowerCase();
+        if (search && !searchStr.includes(search)) return false;
+
+        // Filter
+        if (currentFilter === 'vip') return k.keyType === 'VIP';
+        if (currentFilter === 'expired') return k.expiredAt && new Date(k.expiredAt).getTime() < now;
+        if (currentFilter === 'inactive') return !k.isActivated;
+        return true;
+      });
+
+      // Update UI mapping logic already written above, so we extract row generation:
+      const rows = filtered.map((k) => `
+        <tr class="hover:bg-zinc-900/50" data-key-id="${k._id}">
+          <td class="p-3">
+            <div class="font-mono text-cyan-300">${k.keyString}</div>
+            <label class="block text-[10px] text-zinc-500 mt-1.5 uppercase tracking-wide">Ghi chú Khách hàng</label>
+            <input type="text" data-note-for="${k._id}" value="${escapeHtml(k.adminNote || '')}"
+              placeholder="VD: Zalo 077..., gói VIP tháng 5..."
+              class="mt-0.5 w-full max-w-[220px] rounded border border-zinc-700/80 bg-zinc-950/60 px-2 py-1 text-[11px] text-zinc-300 focus:border-amber-500/50 focus:outline-none" />
+          </td>
+          <td class="p-3">${keyTypeBadge(k.keyType || 'VIP')}</td>
+          <td class="p-3">${k.durationDays} ngày</td>
+          <td class="p-3">${statusBadge(k.status)}</td>
+          <td class="p-3 font-mono text-xs">${k.boundIP || '—'}</td>
+          <td class="p-3">${k.isLoggedIn ? '<span class="text-emerald-400"><i class="fa-solid fa-circle text-[8px]"></i> Online</span>' : '<span class="text-zinc-600">Offline</span>'}</td>
+          <td class="p-3">${k.isActivated ? '<span class="text-emerald-400">Đã KH</span>' : '<span class="text-zinc-500">Chưa</span>'}</td>
+          <td class="p-3 text-xs">
+            <span class="expiry-cell" data-expiry-for="${k._id}">${fmtVN(k.expiredAt)}</span>
+          </td>
+          <td class="p-3 flex flex-wrap gap-1 items-center">
+            <button data-action="extend" data-id="${k._id}" data-days="1" title="Cộng 1 ngày"
+              class="btn-extend-1 px-2 py-1 text-xs rounded border transition"><i class="fa-solid fa-plus-circle"></i> +1 Ngày</button>
+            <button data-action="extend" data-id="${k._id}" data-days="30" title="Cộng 30 ngày"
+              class="btn-extend-30 px-2 py-1 text-xs rounded border transition"><i class="fa-solid fa-calendar-plus"></i> +30 Ngày</button>
+            <button data-action="kick" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-red-500/60 text-red-400 hover:bg-red-500/10"><i class="fa-solid fa-user-slash"></i> Kick</button>
+            <button data-action="toggle" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-amber-500/50 text-amber-400">Ban/Unban</button>
+            <button data-action="reset" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-blue-500/50 text-blue-400">Reset IP</button>
+            <button data-action="delete" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-red-500/50 text-red-400">Xóa</button>
+          </td>
+        </tr>
+      `).join('');
+      document.getElementById('keysTableBody').innerHTML = rows || `<tr><td colspan="9" class="p-4 text-center text-zinc-500">Không có dữ liệu phù hợp</td></tr>`;
+    }
+
+    document.getElementById('searchKeyInput')?.addEventListener('input', applyFilterAndSearch);
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.filter-btn').forEach(b => {
+          b.className = 'filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:bg-zinc-800 border border-transparent';
+        });
+        e.target.className = 'filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-600/20 text-cyan-300 border border-cyan-500/40';
+        currentFilter = e.target.dataset.filter;
+        applyFilterAndSearch();
+      });
+    });
+
+    document.getElementById('cleanupKeysBtn')?.addEventListener('click', async () => {
+      if (!confirm('Bạn có chắc chắn muốn XÓA TOÀN BỘ các Key đã hết hạn? Hành động này không thể hoàn tác!')) return;
+      try {
+        const res = await api('/keys/cleanup', { method: 'DELETE' });
+        alert(res.message || 'Đã dọn dẹp key hết hạn thành công!');
+        loadKeys();
+      } catch (e) {
+        alert(e.message || 'Lỗi khi dọn dẹp hệ thống');
+      }
+    });
+
+    async function loadConfig() {
+      const data = await api('/config');
+      document.getElementById('downloadTitle').value = data.config.downloadTitle || '';
+      document.getElementById('downloadLink').value = data.config.downloadLink || '';
+    }
+
+    async function loadFileTable(category) {
+      const isCh = category === 'cheathack';
+      const tbodyId = isCh ? 'cheathackTableBody' : 'systemFilesTableBody';
+      const tbody = document.getElementById(tbodyId);
+      if (!tbody) return;
+      tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-zinc-500 text-xs">Đang tải...</td></tr>';
+      try {
+        const data = await filesApi('', {}, category);
+        const files = Array.isArray(data.files) ? data.files : [];
+        if (!files.length) {
+          showFilesEmptyState(
+            tbodyId,
+            isCh
+              ? 'bấm <strong class="text-fuchsia-400">[+ Thêm CheatHack Mới]</strong>'
+              : 'bấm <strong class="text-cyan-400">[+ Thêm Cấu Hình Hệ Thống]</strong>'
+          );
+          return;
+        }
+        tbody.innerHTML = files.map(renderSystemFileRow).join('');
+      } catch (e) {
+        const hint = e.message || 'Lỗi tải file';
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-amber-400 text-xs">${escapeHtml(hint)}</td></tr>`;
+      }
+    }
+
+    async function loadSystemFiles() {
+      return loadFileTable('system');
+    }
+
+    async function loadCheathackFiles() {
+      return loadFileTable('cheathack');
+    }
+
+    document.getElementById('openAddSystemFileModalBtn')?.addEventListener('click', () => openSfModal('add', null, 'system'));
+    document.getElementById('openAddCheathackModalBtn')?.addEventListener('click', () => openSfModal('add', null, 'cheathack'));
+    document.getElementById('sfModalCloseBtn')?.addEventListener('click', closeSfModal);
+    document.getElementById('sfModalCancelBtn')?.addEventListener('click', closeSfModal);
+    document.getElementById('sfModal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'sfModal') closeSfModal();
+    });
+
+    document.getElementById('sfModalSaveBtn')?.addEventListener('click', async () => {
+      const editId = document.getElementById('sfEditId').value.trim();
+      const payload = getSystemFileFormPayload();
+      try {
+        let data;
+        const cat = document.getElementById('sfCategory').value || 'system';
+        const tbodyId = cat === 'cheathack' ? 'cheathackTableBody' : 'systemFilesTableBody';
+        const reload = cat === 'cheathack' ? loadCheathackFiles : loadSystemFiles;
+
+        if (editId) {
+          data = await filesApi(editId, { method: 'PUT', body: JSON.stringify(payload) }, cat);
+          const row = document.querySelector(`#${tbodyId} tr[data-file-id="${editId}"]`);
+          if (row && data.file) {
+            row.outerHTML = renderSystemFileRow(data.file);
+          } else {
+            reload();
+          }
+          showSfToast(data.message || 'Đã lưu thay đổi!');
+        } else {
+          data = await filesApi('', { method: 'POST', body: JSON.stringify(payload) }, cat);
+          const tbody = document.getElementById(tbodyId);
+          if (tbody && data.file) {
+            tbody.insertAdjacentHTML('afterbegin', renderSystemFileRow(data.file));
+          } else {
+            reload();
+          }
+          showSfToast(data.message || 'Đã thêm thành công!');
+        }
+        closeSfModal();
+      } catch (e) {
+        showSfToast(e.message, true);
+      }
+    });
+
+    function bindFileTableActions(tbodyId, category) {
+      const tbody = document.getElementById(tbodyId);
+      if (!tbody || tbody.dataset.bound === '1') return;
+      tbody.dataset.bound = '1';
+      tbody.addEventListener('click', async (e) => {
+        const editBtn = e.target.closest('[data-sf-edit]');
+        if (editBtn) {
+          const row = editBtn.closest('tr');
+          if (row) openSfModal('edit', readFileFromRow(row), category);
+          return;
+        }
+        
+        // Handle Toggle Switch
+        if (e.target.classList.contains('toggle-badge-btn')) {
+          const fileId = e.target.dataset.id;
+          const isVip = e.target.checked;
+          const newBadge = isVip ? 'VIP' : 'FREE';
+          try {
+            await filesApi(fileId, { method: 'PUT', body: JSON.stringify({ badgeType: newBadge }) }, category);
+            // Update label
+            const label = e.target.nextElementSibling.nextElementSibling;
+            label.textContent = newBadge;
+            label.className = `ms-2 text-xs font-medium toggle-badge-label ${isVip ? 'text-amber-400' : 'text-zinc-400'}`;
+            showSfToast('Cập nhật nhãn thành công!');
+          } catch (err) {
+            e.target.checked = !isVip; // revert
+            alert('Cập nhật nhãn thất bại');
+          }
+          return;
+        }
+
+        const btn = e.target.closest('[data-sf-delete]');
+        if (!btn) return;
+        const fileId = btn.dataset.sfDelete;
+        if (!fileId || !confirm('Bạn chắc chắn muốn xóa file này?')) return;
+        btn.disabled = true;
+        try {
+          const data = await deleteSystemFileById(fileId, category);
+          const row = btn.closest('tr');
+          if (row) {
+            row.classList.add('file-row-removing');
+            setTimeout(() => {
+              row.remove();
+              const tb = document.getElementById(tbodyId);
+              if (tb && !tb.querySelector('.file-data-row')) {
+                showFilesEmptyState(
+                  tbodyId,
+                  category === 'cheathack'
+                    ? 'bấm <strong class="text-fuchsia-400">[+ Thêm CheatHack Mới]</strong>'
+                    : 'bấm <strong class="text-cyan-400">[+ Thêm Cấu Hình Hệ Thống]</strong>'
+                );
+              }
+            }, 350);
+          }
+          showSfToast(data.message || 'Đã xóa!');
+        } catch (err) {
+          btn.disabled = false;
+          alert(err.message || 'Xóa thất bại');
+        }
+      });
+    }
+
+    bindFileTableActions('systemFilesTableBody', 'system');
+    bindFileTableActions('cheathackTableBody', 'cheathack');
+
+    async function loadLogs() {
+      const data = await api('/logs');
+      document.getElementById('logsTableBody').innerHTML = data.logs.map((l) => `
+        <tr class="hover:bg-zinc-900/50">
+          <td class="p-3 text-xs">${fmtVN(l.timestamp)}</td>
+          <td class="p-3 font-mono text-xs">${l.keyUsed}</td>
+          <td class="p-3 font-mono text-xs">${l.ipAddress}</td>
+          <td class="p-3">${logBadge(l.status)}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('unlockBtn').addEventListener('click', unlock);
+    document.getElementById('adminPassword').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') unlock();
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch(API + '/logout', { method: 'POST', credentials: 'include' });
+      localStorage.removeItem('adminToken');
+      location.reload();
+    });
+
+    document.querySelectorAll('.tab-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach((b) => {
+          b.classList.remove('bg-cyan-600/20', 'text-cyan-300', 'border-cyan-500/40');
+          b.classList.add('text-zinc-400', 'border-transparent');
+        });
+        btn.classList.add('bg-cyan-600/20', 'text-cyan-300', 'border-cyan-500/40');
+        btn.classList.remove('text-zinc-400', 'border-transparent');
+        document.querySelectorAll('.tab-panel').forEach((p) => p.classList.add('hidden'));
+        document.getElementById('panel-' + tab).classList.remove('hidden');
+        if (tab === 'logs') loadLogs();
+        if (tab === 'config') {
+          loadConfig();
+          loadSystemFiles();
+          loadCheathackFiles();
+        }
+      });
+    });
+
+    document.getElementById('generateKeyBtn').addEventListener('click', async () => {
+      const msgEl = document.getElementById('generateMsg');
+      msgEl.classList.add('hidden');
+      try {
+        const body = {
+          durationDays: parseInt(document.getElementById('durationSelect').value, 10),
+          keyType: document.getElementById('keyTypeSelect').value,
+          customKeyName: document.getElementById('customKeyName').value.trim(),
+        };
+        const data = await api('/keys/generate', {
+          method: 'POST',
+          body: JSON.stringify(body),
+        });
+        msgEl.textContent = `Đã tạo: ${data.key.keyString} (${data.key.keyType})`;
+        msgEl.className = 'mt-2 text-sm text-emerald-400';
+        msgEl.classList.remove('hidden');
+        document.getElementById('customKeyName').value = '';
+        loadKeys();
+      } catch (e) {
+        msgEl.textContent = e.message;
+        msgEl.className = 'mt-2 text-sm text-red-400';
+        msgEl.classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('refreshKeysBtn').addEventListener('click', loadKeys);
+
+    let noteSaveTimer = null;
+    document.getElementById('keysTableBody').addEventListener('input', (e) => {
+      const input = e.target.closest('input[data-note-for]');
+      if (!input) return;
+      const id = input.dataset.noteFor;
+      clearTimeout(noteSaveTimer);
+      noteSaveTimer = setTimeout(async () => {
+        try {
+          await api(`/keys/${id}/note`, {
+            method: 'PUT',
+            body: JSON.stringify({ adminNote: input.value.trim() }),
+          });
+        } catch (err) {
+          console.warn('Lưu ghi chú thất bại:', err.message);
+        }
+      }, 600);
+    });
+
+    function flashExpiryCell(keyId, isoDate) {
+      const cell = document.querySelector(`[data-expiry-for="${keyId}"]`);
+      if (!cell) return;
+      cell.textContent = fmtVN(isoDate);
+      cell.classList.remove('expiry-flash');
+      void cell.offsetWidth;
+      cell.classList.add('expiry-flash');
+      setTimeout(() => cell.classList.remove('expiry-flash'), 1300);
+    }
+
+    async function extendKeyDays(keyId, days, btn) {
+      if (btn) btn.disabled = true;
+      try {
+        const data = await api('/extend-key', {
+          method: 'POST',
+          body: JSON.stringify({ keyId, daysToAdd: days }),
+        });
+        flashExpiryCell(keyId, data.expiredAt || data.key?.expiredAt);
+        const row = document.querySelector(`tr[data-key-id="${keyId}"]`);
+        const activatedCell = row?.children[6];
+        if (activatedCell && data.key?.isActivated) {
+          activatedCell.innerHTML = '<span class="text-emerald-400">Đã KH</span>';
+        }
+      } catch (err) {
+        alert(err.message || 'Gia hạn thất bại');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    document.getElementById('keysTableBody').addEventListener('click', async (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      const action = btn.dataset.action;
+
+      if (action === 'extend') {
+        const days = Number(btn.dataset.days);
+        if (!days) return;
+        await extendKeyDays(id, days, btn);
+        return;
+      }
+
+      if (action === 'kick' && !confirm('Kick người dùng khỏi phiên ngay lập tức?')) return;
+      if (action === 'delete' && !confirm('Xóa key này?')) return;
+      const paths = { kick: `/keys/${id}/kick`, toggle: `/keys/${id}/toggle`, reset: `/keys/${id}/reset-ip`, delete: `/keys/${id}` };
+      const methods = { kick: 'PUT', toggle: 'PUT', reset: 'PUT', delete: 'DELETE' };
+      await api(paths[action], { method: methods[action] });
+      loadKeys();
+    });
+
+    document.getElementById('saveConfigBtn').addEventListener('click', async () => {
+      await api('/config', {
+        method: 'PUT',
+        body: JSON.stringify({
+          downloadTitle: document.getElementById('downloadTitle').value,
+          downloadLink: document.getElementById('downloadLink').value,
+        }),
+      });
+      const msg = document.getElementById('configMsg');
+      msg.textContent = 'Đã lưu cấu hình';
+      msg.classList.remove('hidden');
+      setTimeout(() => msg.classList.add('hidden'), 3000);
+    });
+
+    function setLockControlState(enabled) {
+      const passwordInput = document.getElementById('adminPassword');
+      const unlockBtn = document.getElementById('unlockBtn');
+      const lockDbStatus = document.getElementById('lockDbStatus');
+      const lockError = document.getElementById('lockError');
+      if (passwordInput) passwordInput.disabled = !enabled;
+      if (unlockBtn) unlockBtn.disabled = !enabled;
+      if (lockDbStatus) {
+        lockDbStatus.textContent = enabled
+          ? ''
+          : 'Database chưa kết nối hoặc đang fallback — chờ backend phục hồi.';
+        lockDbStatus.className = enabled
+          ? 'mt-2 text-sm text-emerald-400 hidden'
+          : 'mt-2 text-sm text-red-400';
+      }
+      if (enabled && lockError) {
+        lockError.classList.add('hidden');
+      }
+    }
+
+    async function refreshDbStatus() {
+      const el = document.getElementById('dbStatusBadge');
+      if (!el) return;
+      try {
+        const res = await fetch('/api/health');
+        const data = await res.json();
+        if (data.database === 'connected') {
+          el.textContent = `Database: connected (${data.connectMode || 'OK'})`;
+          el.className = 'text-xs mt-1 text-emerald-400';
+          setLockControlState(true);
+        } else {
+          el.textContent = 'Database: disconnected — chạy lại CHAY_HE_THONG.bat';
+          el.className = 'text-xs mt-1 text-red-400';
+          setLockControlState(false);
+        }
+      } catch {
+        el.textContent = 'Database: không gọi được API — chạy CHAY_HE_THONG.bat';
+        el.className = 'text-xs mt-1 text-red-400';
+        setLockControlState(false);
+      }
+    }
+
+    refreshDbStatus();
+    setInterval(refreshDbStatus, 12000);
+
+    // ── Fake Live IP Traffic Monitor ──
+    function addLiveIpLog() {
+      const container = document.getElementById('liveIpLogContainer');
+      if (!container) return;
+
+      const actions = [
+        { text: 'vừa yêu cầu phân tích lõi AI', icon: '🟢', type: 'Key VIP', color: 'text-amber-400' },
+        { text: 'đã tải file "cheathack-pmt3"', icon: '📥', type: 'Key FREE', color: 'text-zinc-300' },
+        { text: 'vừa yêu cầu phân tích lõi AI', icon: '🟢', type: 'Key FREE', color: 'text-zinc-300' },
+        { text: 'đã tải file "system-bypass"', icon: '📥', type: 'Key VIP', color: 'text-amber-400' },
+        { text: 'đăng nhập hệ thống Cloud', icon: '⚡', type: 'Key VIP', color: 'text-amber-400' }
+      ];
+
+      const randAction = actions[Math.floor(Math.random() * actions.length)];
+      const randIp = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 90)}x.xx`;
+      
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
+      const div = document.createElement('div');
+      div.className = 'animate-fade-in-down whitespace-nowrap overflow-hidden text-ellipsis';
+      div.innerHTML = `${randAction.icon} <span class="text-zinc-500">[${timeStr}]</span> IP: <span class="text-cyan-300">${randIp}</span> ${randAction.text} [<span class="${randAction.color} font-semibold">${randAction.type}</span>]`;
+      
+      container.prepend(div);
+      
+      if (container.children.length > 30) {
+        container.removeChild(container.lastChild);
+      }
+    }
+    
+    // Khởi tạo vài dòng đầu
+    for(let i=0; i<4; i++) { addLiveIpLog(); }
+    
+    function scheduleNextIpLog() {
+      const delay = Math.floor(Math.random() * (25000 - 12000 + 1)) + 12000;
+      setTimeout(() => {
+        addLiveIpLog();
+        scheduleNextIpLog();
+      }, delay);
+    }
+    scheduleNextIpLog();
+
+    checkSession();
+  </script>
+</body>
+</html>

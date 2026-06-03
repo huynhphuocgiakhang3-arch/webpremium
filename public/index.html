@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cổng Key VIP — AI Sensitivity</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100 antialiased">
+  <div class="max-w-2xl mx-auto px-4 py-12">
+    <header class="text-center mb-10">
+      <h1 class="text-2xl font-bold text-white">Cổng Key VIP</h1>
+      <p class="text-slate-400 text-sm mt-1">Đăng nhập để tải phần mềm & công cụ AI</p>
+    </header>
+
+    <!-- Form đăng nhập -->
+    <div id="loginSection" class="rounded-2xl border border-slate-800 bg-slate-900/50 p-8 shadow-xl">
+      <label class="block text-sm text-slate-400 mb-2">Mã Key VIP</label>
+      <input id="keyInput" type="text" placeholder="VIP-XXXX-XXXX"
+        class="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 font-mono text-sm uppercase focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500" />
+      <p id="loginError" class="mt-2 text-sm text-red-400 hidden"></p>
+      <button id="loginBtn" type="button"
+        class="mt-4 w-full rounded-xl bg-violet-600 hover:bg-violet-500 py-3 font-semibold transition">
+        Đăng nhập
+      </button>
+    </div>
+
+    <!-- Dashboard sau đăng nhập -->
+    <div id="dashboard" class="hidden space-y-6">
+      <!-- Đếm ngược thời gian -->
+      <div class="rounded-2xl border border-violet-500/30 bg-gradient-to-br from-slate-900 to-violet-950/30 p-6">
+        <h2 class="text-sm text-slate-400 mb-2">Thời hạn sử dụng</h2>
+        <p class="text-xs text-slate-500 mb-1">Hết hạn: <span id="expiredAtLabel">—</span></p>
+        <div id="countdown" class="text-3xl font-mono font-bold text-violet-300 tracking-wider">
+          --:--:--
+        </div>
+        <p class="text-sm text-slate-400 mt-2">Còn <span id="daysLeftLabel">0</span> ngày (gói <span id="durationLabel">0</span> ngày)</p>
+      </div>
+
+      <!-- Tải phần mềm -->
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
+        <h2 class="text-sm text-slate-400 mb-3">Phần mềm</h2>
+        <p id="downloadTitle" class="text-lg font-semibold mb-4">—</p>
+        <a id="downloadBtn" href="#" target="_blank" rel="noopener"
+          class="inline-block rounded-xl bg-emerald-600 hover:bg-emerald-500 px-6 py-2.5 text-sm font-semibold">
+          Tải xuống
+        </a>
+      </div>
+
+      <!-- AI Engine -->
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
+        <h2 class="text-sm text-slate-400 mb-4">AI Sensitivity Engine</h2>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label class="text-xs text-slate-500">Thiết bị</label>
+            <input id="deviceModel" class="w-full mt-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" placeholder="iPhone 15 / Samsung S24" />
+          </div>
+          <div>
+            <label class="text-xs text-slate-500">DPI</label>
+            <input id="dpi" type="number" value="400" class="w-full mt-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="text-xs text-slate-500">Hz màn hình</label>
+            <input id="hz" type="number" value="120" class="w-full mt-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="text-xs text-slate-500">Phong cách</label>
+            <select id="playStyle" class="w-full mt-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm">
+              <option value="rusher">Rusher</option>
+              <option value="sniper">Sniper</option>
+            </select>
+          </div>
+        </div>
+        <button id="aiTuneBtn" type="button"
+          class="mt-4 w-full rounded-xl bg-cyan-600 hover:bg-cyan-500 py-2.5 text-sm font-semibold">
+          Tính độ nhạy AI
+        </button>
+        <div id="aiResults" class="mt-4 hidden grid grid-cols-2 gap-2 text-sm">
+          <div class="rounded-lg bg-slate-800 p-3"><span class="text-slate-500">General</span><br><span id="rGeneral" class="font-mono text-cyan-300">—</span>%</div>
+          <div class="rounded-lg bg-slate-800 p-3"><span class="text-slate-500">Red Dot</span><br><span id="rRedDot" class="font-mono text-cyan-300">—</span>%</div>
+          <div class="rounded-lg bg-slate-800 p-3"><span class="text-slate-500">Scope 2x</span><br><span id="rScope2x" class="font-mono text-cyan-300">—</span>%</div>
+          <div class="rounded-lg bg-slate-800 p-3"><span class="text-slate-500">Scope 4x</span><br><span id="rScope4x" class="font-mono text-cyan-300">—</span>%</div>
+          <div class="rounded-lg bg-slate-800 p-3 col-span-2"><span class="text-slate-500">Fire Button Size</span><br><span id="rFire" class="font-mono text-cyan-300">—</span>%</div>
+        </div>
+        <p id="aiError" class="mt-2 text-sm text-red-400 hidden"></p>
+      </div>
+
+      <button id="logoutClientBtn" class="text-sm text-slate-500 hover:text-slate-300">Đăng xuất</button>
+    </div>
+  </div>
+
+  <script>
+    let sessionKey = sessionStorage.getItem('vipKey') || '';
+    let countdownInterval = null;
+    let expiredAtMs = null;
+
+    function fmtVN(iso) {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
+    }
+
+    function pad(n) {
+      return String(n).padStart(2, '0');
+    }
+
+    function updateCountdown() {
+      if (!expiredAtMs) return;
+      const diff = Math.max(0, expiredAtMs - Date.now());
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      document.getElementById('countdown').textContent =
+        `${pad(h)}:${pad(m)}:${pad(s)}`;
+      if (diff <= 0 && countdownInterval) {
+        clearInterval(countdownInterval);
+        document.getElementById('countdown').textContent = 'HẾT HẠN';
+      }
+    }
+
+    function showDashboard(data) {
+      document.getElementById('loginSection').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+
+      expiredAtMs = data.expiredAt ? new Date(data.expiredAt).getTime() : null;
+      document.getElementById('expiredAtLabel').textContent = fmtVN(data.expiredAt);
+      document.getElementById('daysLeftLabel').textContent = data.daysLeft ?? '—';
+      document.getElementById('durationLabel').textContent = data.durationDays ?? '—';
+      document.getElementById('downloadTitle').textContent = data.downloadTitle || 'Phần mềm';
+      const dl = document.getElementById('downloadBtn');
+      dl.href = data.downloadLink || '#';
+      dl.textContent = 'Tải: ' + (data.downloadTitle || 'Phần mềm');
+
+      if (countdownInterval) clearInterval(countdownInterval);
+      updateCountdown();
+      countdownInterval = setInterval(updateCountdown, 1000);
+    }
+
+    async function login() {
+      const key = document.getElementById('keyInput').value.trim();
+      const errEl = document.getElementById('loginError');
+      errEl.classList.add('hidden');
+      if (!key) {
+        errEl.textContent = 'Vui lòng nhập key';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        sessionKey = key;
+        sessionStorage.setItem('vipKey', key);
+        sessionStorage.setItem('vipSession', JSON.stringify(data));
+        showDashboard(data);
+      } catch (e) {
+        errEl.textContent = e.message;
+        errEl.classList.remove('hidden');
+      }
+    }
+
+    async function aiTune() {
+      const errEl = document.getElementById('aiError');
+      errEl.classList.add('hidden');
+      try {
+        const res = await fetch('/api/ai/ai-tune', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': sessionKey,
+          },
+          body: JSON.stringify({
+            deviceModel: document.getElementById('deviceModel').value,
+            dpi: Number(document.getElementById('dpi').value),
+            screenRefreshRate: Number(document.getElementById('hz').value),
+            playStyle: document.getElementById('playStyle').value,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        document.getElementById('rGeneral').textContent = data.general;
+        document.getElementById('rRedDot').textContent = data.redDot;
+        document.getElementById('rScope2x').textContent = data.scope2x;
+        document.getElementById('rScope4x').textContent = data.scope4x;
+        document.getElementById('rFire').textContent = data.fireButtonSize;
+        document.getElementById('aiResults').classList.remove('hidden');
+      } catch (e) {
+        errEl.textContent = e.message;
+        errEl.classList.remove('hidden');
+      }
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', login);
+    document.getElementById('keyInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') login();
+    });
+    document.getElementById('aiTuneBtn').addEventListener('click', aiTune);
+    document.getElementById('logoutClientBtn').addEventListener('click', () => {
+      sessionStorage.clear();
+      location.reload();
+    });
+
+    // Khôi phục phiên
+    (async () => {
+      const saved = sessionStorage.getItem('vipSession');
+      if (sessionKey && saved) {
+        try {
+          const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key: sessionKey }),
+          });
+          const data = await res.json();
+          if (res.ok) showDashboard(data);
+        } catch {
+          sessionStorage.clear();
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

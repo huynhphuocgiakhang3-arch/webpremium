@@ -553,7 +553,7 @@
               <p class="text-xs portal-label text-slate-400 mt-2">${escapeHtml(f.description || '—')}</p>
               <p class="text-xs text-slate-500 mt-2"><i class="fa-regular fa-calendar mr-1"></i>Ngày Upload: ${escapeHtml(f.uploadDate || '—')}</p>
             </div>
-            <a href="${escapeHtml(f.downloadLink)}" target="_blank" rel="noopener noreferrer" class="cyber-download-btn shrink-0 ${isVip ? 'vip-download-trigger' : ''}">
+${(typeof isVip !== 'undefined' && isVip) ? 'vip-download-trigger' : ''}
               <i class="fa-solid fa-download"></i> Download
             </a>
           </div>

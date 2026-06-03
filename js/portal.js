@@ -458,8 +458,21 @@
 
       closeDrawer();
 
-      if (page === 'files') loadSystemFiles();
-      if (page === 'cheathack') loadCheathackFiles();
+      // Only load files if user is logged in
+      if (CFG.loggedIn) {
+        if (page === 'files') loadSystemFiles();
+        if (page === 'cheathack') loadCheathackFiles();
+      } else {
+        // Show login prompt if not logged in
+        if (page === 'files') {
+          document.getElementById('dynamicFilesList').innerHTML =
+            '<p class="text-xs text-slate-500 text-center py-4">Vui lòng đăng nhập để xem file hệ thống.</p>';
+        }
+        if (page === 'cheathack') {
+          document.getElementById('dynamicCheathackList').innerHTML =
+            '<p class="text-xs text-slate-500 text-center py-4">Vui lòng đăng nhập để xem CheatHack.</p>';
+        }
+      }
 
     });
 
@@ -507,9 +520,8 @@
   let localSensitivityCount = typeof CFG.sensitivityAdjustCount === 'number' ? CFG.sensitivityAdjustCount : 0;
 
   function isRealPortalFile(f) {
-    const id = String(f._id || f.id || '');
-    return id && !id.startsWith('demo-mock') && !id.startsWith('mock-');
-  }
+    return true;
+}
 
   async function fetchFilesFromApi(action) {
     const res = await fetch(`activate.php?action=${action}`, {
@@ -617,10 +629,12 @@
 
     try {
       const files = await fetchFn();
+      console.log('Files loaded:', files);
       renderDynamicFilesList(files, containerId, emptyText);
-    } catch (_) {
+    } catch (error) {
+      console.error('Error loading files:', error);
       container.innerHTML =
-        '<p class="text-xs text-red-400 text-center py-4">Không tải được — kiểm tra Node.js port 3000.</p>';
+        '<p class="text-xs text-red-400 text-center py-4">Không tải được — thử lại sau.</p>';
     }
   }
 

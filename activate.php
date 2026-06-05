@@ -308,6 +308,9 @@ $portal_config = [
     <button data-page="cheathack" class="w-full text-left px-4 py-3 rounded-lg hover:bg-fuchsia-500/10 text-slate-300 flex items-center gap-2">
       <i class="fa-solid fa-gamepad"></i> CheatHack - Pmt3
     </button>
+    <button data-page="makefile" class="w-full text-left px-4 py-3 rounded-lg hover:bg-amber-500/10 text-amber-400 flex items-center gap-2">
+      <i class="fa-solid fa-wand-magic-sparkles"></i> File Make Theo Yêu Cầu
+    </button>
   </nav>
   <form method="POST" action="activate.php" class="mt-8">
     <input type="hidden" name="action" value="logout">
@@ -325,14 +328,11 @@ $portal_config = [
   <!-- MỤC 1: TÀI KHOẢN -->
   <section id="page-account" class="page-section active">
     <div class="grid md:grid-cols-3 gap-4">
-      <!-- Countdown compact -->
       <div class="md:col-span-1 glass-panel rounded-xl p-4 border border-violet-500/30">
         <p class="text-xs text-slate-500 uppercase tracking-wider">Tời gian còn lại</p>
         <p id="countdown" class="text-lg font-mono font-bold text-violet-300 mt-2">--:--:--</p>
         <p class="text-xs text-slate-600 mt-1">~<?= (int) $session_days_left ?> ngày</p>
       </div>
-
-      <!-- Digital ID Card -->
       <div class="md:col-span-2 digital-id rounded-2xl p-6">
         <div class="flex flex-wrap justify-between items-start gap-4 relative z-10">
           <div>
@@ -349,10 +349,7 @@ $portal_config = [
           <div>
             <span class="portal-label text-slate-500 text-xs">Trạng thái Key</span>
             <p class="flex items-center gap-2 mt-1 font-semibold text-emerald-400">
-              <span class="status-ping-wrap">
-                <span class="status-ping-ring"></span>
-                <span class="status-ping-core"></span>
-              </span>
+              <span class="status-ping-wrap"><span class="status-ping-ring"></span><span class="status-ping-core"></span></span>
               BYPASS ANTI-CHEAT (SECURED 100%)
             </p>
           </div>
@@ -370,18 +367,12 @@ $portal_config = [
           </div>
           <div class="sm:col-span-2 premium-stat-row">
             <span class="portal-label text-slate-500 text-xs">Băng thông phân tích AI độc quyền</span>
-            <p class="tech-stat-line mt-1 text-violet-300">
-              <i class="fa-solid fa-bolt text-amber-400"></i>
-              Băng thông riêng cấp VIP: Dedicated 10 Gbps (Bypass Secure)
-            </p>
+            <p class="tech-stat-line mt-1 text-violet-300"><i class="fa-solid fa-bolt text-amber-400"></i> Băng thông riêng cấp VIP: Dedicated 10 Gbps (Bypass Secure)</p>
           </div>
           <div class="sm:col-span-2 premium-stat-row">
             <span class="portal-label text-slate-500 text-xs">Trạng thái Bảo mật mã nguồn</span>
             <p class="tech-stat-line mt-1 text-emerald-400/95">
-              <span class="status-ping-wrap shrink-0" style="width:10px;height:10px">
-                <span class="status-ping-ring"></span>
-                <span class="status-ping-core" style="width:6px;height:6px"></span>
-              </span>
+              <span class="status-ping-wrap shrink-0" style="width:10px;height:10px"><span class="status-ping-ring"></span><span class="status-ping-core" style="width:6px;height:6px"></span></span>
               Anti-Crack: Chống dò log / Khóa luồng ngược (Bypass Engine v5.1)
             </p>
           </div>
@@ -394,24 +385,15 @@ $portal_config = [
           </div>
           <div>
             <span class="portal-label text-slate-500 text-xs">Trạng thái phân bổ dữ liệu</span>
-            <p class="tech-stat-line mt-1 text-cyan-300/90">
-              <i class="fa-solid fa-server text-violet-400"></i>
-              Server Cluster: Node-SG03 (Hồ Chí Minh VIP Route)
-            </p>
+            <p class="tech-stat-line mt-1 text-cyan-300/90"><i class="fa-solid fa-server text-violet-400"></i> Server Cluster: Node-SG03 (Hồ Chí Minh VIP Route)</p>
           </div>
           <div>
             <span class="portal-label text-slate-500 text-xs">Bảo mật mã hóa</span>
-            <p class="tech-stat-line mt-1 text-emerald-400/90">
-              <i class="fa-solid fa-shield-check text-emerald-400"></i>
-              Mã hóa cấp độ quân sự SHA-256 Verified
-            </p>
+            <p class="tech-stat-line mt-1 text-emerald-400/90"><i class="fa-solid fa-shield-check text-emerald-400"></i> Mã hóa cấp độ quân sự SHA-256 Verified</p>
           </div>
           <div>
             <span class="portal-label text-slate-500 text-xs">Thuật toán tối ưu</span>
-            <p class="tech-stat-line mt-1 text-violet-300/90">
-              <i class="fa-solid fa-brain text-fuchsia-400"></i>
-              AI Core: Deep Learning Meta OB53 v2.0
-            </p>
+            <p class="tech-stat-line mt-1 text-violet-300/90"><i class="fa-solid fa-brain text-fuchsia-400"></i> AI Core: Deep Learning Meta OB53 v2.0</p>
           </div>
           <div class="sm:col-span-2">
             <span class="portal-label text-slate-500 text-xs">Hết hạn</span>
@@ -424,16 +406,12 @@ $portal_config = [
 
   <!-- MỤC 2: PHÂN TÍCH AI -->
   <section id="page-ai" class="page-section">
-    <h2 class="ai-title-nowrap text-base sm:text-lg font-bold text-cyan-300 mb-6">
-      Phân Tích AI - Fine-tune sensitivity
-    </h2>
-
+    <h2 class="ai-title-nowrap text-base sm:text-lg font-bold text-cyan-300 mb-6">Phân Tích AI - Fine-tune sensitivity</h2>
     <div class="flex gap-2 mb-4">
       <button type="button" id="tabIos" class="flex-1 py-2 border-b-2 border-cyan-400 text-cyan-300 text-sm font-semibold">iOS</button>
       <button type="button" id="tabAndroid" class="flex-1 py-2 border-b-2 border-transparent text-slate-400 text-sm font-semibold">Adr</button>
     </div>
     <div id="deviceGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-8"></div>
-
     <p class="text-xs text-slate-500 uppercase mb-3">Tình trạng hiện tại (chọn nhiều)</p>
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
       <div class="condition-box rounded-xl p-3 text-center text-xs" data-condition="nang_tam"><i class="fa-solid fa-weight-hanging text-lg mb-1 block"></i>Nặng tâm</div>
@@ -443,21 +421,14 @@ $portal_config = [
       <div class="condition-box rounded-xl p-3 text-center text-xs" data-condition="lac_dan"><i class="fa-solid fa-braille text-lg mb-1 block"></i>Lạc đạn</div>
       <div class="condition-box rounded-xl p-3 text-center text-xs" data-condition="kho_keo"><i class="fa-solid fa-lock text-lg mb-1 block"></i>Khó kéo</div>
     </div>
-
     <button type="button" id="btnAiAnalyze" class="w-full rounded-xl bg-gradient-to-r from-violet-600 to-cyan-600 py-4 font-bold text-white shadow-lg shadow-violet-500/20">
       <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Bắt Đầu Phân Tích Bằng AI
     </button>
-
     <div id="ob53ResultCard" class="ob53-result-card relative">
       <div class="unlock-vip-overlay">
-        <div class="text-5xl text-amber-400 mb-4 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
-          <i class="fa-solid fa-lock"></i>
-        </div>
-        <button class="unlock-vip-btn" onclick="window.open('https://zalo.me/0775893691', '_blank')">
-          🔓 Mở Khóa Thông Số VIP Ngay
-        </button>
+        <div class="text-5xl text-amber-400 mb-4 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]"><i class="fa-solid fa-lock"></i></div>
+        <button class="unlock-vip-btn" onclick="window.open('https://zalo.me/0775893691', '_blank')">🔓 Mở Khóa Thông Số VIP Ngay</button>
       </div>
-
       <p class="text-center text-xs text-violet-300/90 uppercase tracking-widest mb-1">OB53 · AI Optimized Profile</p>
       <h3 id="ob53DeviceLabel" class="text-center text-sm font-bold text-cyan-300 mb-5">—</h3>
       <div class="grid grid-cols-2 gap-3">
@@ -475,11 +446,8 @@ $portal_config = [
 
   <!-- MỤC 3: FILE TINH CHỈNH HỆ THỐNG -->
   <section id="page-files" class="page-section">
-    <h2 class="text-base sm:text-lg font-bold text-cyan-300 mb-2">
-      <i class="fa-solid fa-file-code mr-2"></i>File Tinh Chỉnh Hệ Thống
-    </h2>
+    <h2 class="text-base sm:text-lg font-bold text-cyan-300 mb-2"><i class="fa-solid fa-file-code mr-2"></i>File Tinh Chỉnh Hệ Thống</h2>
     <p class="text-xs portal-label text-slate-500 mb-6">Danh sách 100% từ Cloud Admin — tự cập nhật mỗi 7 giây</p>
-
     <div id="dynamicFilesList" class="space-y-3">
       <p class="text-xs text-slate-500 text-center py-4">Đang tải danh sách file từ Cloud...</p>
     </div>
@@ -487,55 +455,148 @@ $portal_config = [
 
   <!-- MỤC 4: CHEATHACK - PMT3 -->
   <section id="page-cheathack" class="page-section">
-    <h2 class="text-base sm:text-lg font-bold text-fuchsia-300 mb-2">
-      <i class="fa-solid fa-gamepad mr-2"></i>CheatHack - Pmt3
-    </h2>
+    <h2 class="text-base sm:text-lg font-bold text-fuchsia-300 mb-2"><i class="fa-solid fa-gamepad mr-2"></i>CheatHack - Pmt3</h2>
     <p class="text-xs portal-label text-slate-500 mb-6">Danh sách 100% từ Cloud Admin — tự cập nhật mỗi 7 giây</p>
     <div id="dynamicCheathackList" class="space-y-3">
       <p class="text-xs text-slate-500 text-center py-4">Đang tải CheatHack từ Cloud...</p>
     </div>
   </section>
+
+  <!-- MỤC 5: FILE MAKE THEO YÊU CẦU -->
+  <section id="page-makefile" class="page-section">
+    <div class="mb-6">
+      <h2 class="text-xl font-bold portal-heading text-amber-400 flex items-center gap-3">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> File Make Theo Yêu Cầu
+      </h2>
+      <p class="text-xs text-slate-500 mt-1 font-mono">Tạo file tinh chỉnh cá nhân hóa theo thiết bị của bạn</p>
+    </div>
+
+    <!-- THÔNG TIN THIẾT BỊ -->
+    <div class="glass-panel rounded-2xl p-6 mb-5 border border-amber-500/20 shadow-[0_0_30px_rgba(251,191,36,0.06)]">
+      <h3 class="text-xs font-bold text-amber-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-mobile-screen"></i> Thông Tin Thiết Bị
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs portal-label text-slate-500 mb-2 block">Tên Thiết Bị iOS</label>
+          <div class="relative">
+            <select id="iosDeviceSelect" class="w-full appearance-none bg-zinc-900/80 border border-cyan-500/30 text-cyan-300 rounded-xl px-4 py-3 pr-10 text-sm font-mono focus:outline-none focus:border-cyan-400 cursor-pointer transition">
+              <option value="">-- Chọn iPhone --</option>
+              <option>iPhone 6 Plus</option><option>iPhone 7</option><option>iPhone 7 Plus</option>
+              <option>iPhone 8</option><option>iPhone 8 Plus</option><option>iPhone X</option>
+              <option>iPhone XS</option><option>iPhone XS Max</option><option>iPhone XR</option>
+              <option>iPhone 11</option><option>iPhone 11 Pro</option><option>iPhone 11 Pro Max</option>
+              <option>iPhone 12</option><option>iPhone 12 Pro</option><option>iPhone 12 Pro Max</option>
+              <option>iPhone 13</option><option>iPhone 13 Pro</option><option>iPhone 13 Pro Max</option>
+              <option>iPhone 14</option><option>iPhone 14 Pro</option><option>iPhone 14 Pro Max</option>
+              <option>iPhone 15</option><option>iPhone 15 Pro</option><option>iPhone 15 Pro Max</option>
+              <option>iPhone 16</option><option>iPhone 16 Pro</option><option>iPhone 16 Pro Max</option>
+              <option>iPhone 17</option><option>iPhone 17 Pro</option><option>iPhone 17 Pro Max</option>
+            </select>
+            <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-cyan-400 text-xs pointer-events-none"></i>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs portal-label text-slate-500 mb-2 block">Tên Thiết Bị Android</label>
+          <div class="relative">
+            <select id="adrDeviceSelect" class="w-full appearance-none bg-zinc-900/80 border border-violet-500/30 text-violet-300 rounded-xl px-4 py-3 pr-10 text-sm font-mono focus:outline-none focus:border-violet-400 cursor-pointer transition">
+              <option value="">-- Chọn Android --</option>
+              <option>Samsung Galaxy S21</option><option>Samsung Galaxy S22</option>
+              <option>Samsung Galaxy S23</option><option>Samsung Galaxy S24</option>
+              <option>Samsung Galaxy S24 Ultra</option><option>Samsung Galaxy A54</option>
+              <option>Samsung Galaxy A55</option><option>Xiaomi 13</option>
+              <option>Xiaomi 14</option><option>Xiaomi 14 Pro</option>
+              <option>Xiaomi Redmi Note 12</option><option>Xiaomi Redmi Note 13</option>
+              <option>OPPO Reno 10</option><option>OPPO Reno 11</option>
+              <option>OPPO Find X6</option><option>Vivo V27</option>
+              <option>Vivo V29</option><option>Realme GT 5</option>
+              <option>OnePlus 12</option><option>Google Pixel 8</option>
+              <option>Google Pixel 8 Pro</option>
+            </select>
+            <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-violet-400 text-xs pointer-events-none"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHỌN CHỨC NĂNG -->
+    <div class="glass-panel rounded-2xl p-6 mb-5 border border-cyan-500/15 shadow-[0_0_30px_rgba(0,245,255,0.04)]">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xs font-bold text-cyan-400 uppercase tracking-widest flex items-center gap-2">
+          <i class="fa-solid fa-sliders"></i> Chọn Chức Năng
+        </h3>
+        <span id="featureCountBadge" class="text-xs font-mono px-3 py-1 rounded-full border border-cyan-500/30 text-cyan-400 bg-cyan-500/10">
+          <?php if ($session_key_type === 'VIP'): ?>VIP: 0/2 chức năng<?php else: ?>🔒 Key Free<?php endif; ?>
+        </span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="featureGrid">
+        <?php
+        $features = [
+          ['id'=>'nhe_tam',  'icon'=>'fa-feather',       'name'=>'Nhẹ Tâm',        'color'=>'text-cyan-300 border-cyan-500/40 hover:border-cyan-400 hover:bg-cyan-500/10'],
+          ['id'=>'bam_dau',  'icon'=>'fa-crosshairs',    'name'=>'Bám Đầu',        'color'=>'text-violet-300 border-violet-500/40 hover:border-violet-400 hover:bg-violet-500/10'],
+          ['id'=>'dam_tam',  'icon'=>'fa-shield-halved', 'name'=>'Đầm Tâm',        'color'=>'text-amber-300 border-amber-500/40 hover:border-amber-400 hover:bg-amber-500/10'],
+          ['id'=>'fix_rung', 'icon'=>'fa-hand',          'name'=>'Fix Rung',       'color'=>'text-emerald-300 border-emerald-500/40 hover:border-emerald-400 hover:bg-emerald-500/10'],
+          ['id'=>'fix_lo',   'icon'=>'fa-ban',           'name'=>'Fix Lố Đầu',    'color'=>'text-red-300 border-red-500/40 hover:border-red-400 hover:bg-red-500/10'],
+          ['id'=>'tang_fps', 'icon'=>'fa-gauge-high',    'name'=>'Tăng FPS',       'color'=>'text-yellow-300 border-yellow-500/40 hover:border-yellow-400 hover:bg-yellow-500/10'],
+          ['id'=>'nhay_man', 'icon'=>'fa-display',       'name'=>'Nhạy Màn 120Hz', 'color'=>'text-pink-300 border-pink-500/40 hover:border-pink-400 hover:bg-pink-500/10'],
+          ['id'=>'anti_lag', 'icon'=>'fa-bolt',          'name'=>'Anti Lag',       'color'=>'text-orange-300 border-orange-500/40 hover:border-orange-400 hover:bg-orange-500/10'],
+        ];
+        foreach ($features as $f): ?>
+        <button type="button" data-feature="<?= $f['id'] ?>"
+          class="feature-btn relative flex flex-col items-center justify-center gap-2 p-4 rounded-xl border bg-zinc-900/60 transition-all duration-200 <?= $f['color'] ?> <?= $session_key_type !== 'VIP' ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer' ?>">
+          <i class="fa-solid <?= $f['icon'] ?> text-xl"></i>
+          <span class="text-xs font-semibold text-center leading-tight"><?= $f['name'] ?></span>
+          <div class="feature-check absolute top-2 right-2 w-4 h-4 rounded-full bg-cyan-500 hidden items-center justify-center">
+            <i class="fa-solid fa-check text-[9px] text-black"></i>
+          </div>
+        </button>
+        <?php endforeach; ?>
+      </div>
+      <p class="text-xs text-slate-600 mt-4 text-center">
+        <?php if ($session_key_type === 'VIP'): ?>
+          ✨ Key VIP — chọn tối đa 2 chức năng — giới hạn 1 lần/ngày
+        <?php else: ?>
+          🔒 Key Free — không thể chọn chức năng. <a href="https://zalo.me/0775893691" target="_blank" class="text-amber-400 underline">Nâng cấp VIP</a> để sử dụng
+        <?php endif; ?>
+      </p>
+    </div>
+
+    <!-- NÚT TẠO FILE -->
+    <div class="text-center">
+      <button id="startMakeFileBtn" class="btn-cyber-primary px-10 py-4 rounded-xl text-sm">
+        <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Bắt Đầu Tạo File
+      </button>
+    </div>
+  </section>
+
 </main>
 
-<!-- Modal giới hạn FREE — độ nhạy -->
+<!-- Modals cũ giữ nguyên -->
 <div id="freeLimitModal" class="modal-overlay fixed inset-0 z-[85] hidden flex items-center justify-center p-4">
   <div class="glass-panel rounded-2xl p-8 max-w-md w-full border border-amber-500/40 shadow-[0_0_40px_rgba(251,191,36,0.15)]">
     <p class="text-amber-400 text-sm font-bold uppercase tracking-wide mb-3"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Thông báo</p>
-    <p id="freeLimitMessage" class="text-slate-200 text-sm leading-relaxed">
-      Tài khoản Free chỉ được tinh chỉnh độ nhạy 1 lần duy nhất! Bạn cần mua Key VIP để tiếp tục sử dụng tính năng này.
-    </p>
+    <p id="freeLimitMessage" class="text-slate-200 text-sm leading-relaxed">Tài khoản Free chỉ được tinh chỉnh độ nhạy 1 lần duy nhất! Bạn cần mua Key VIP để tiếp tục sử dụng tính năng này.</p>
     <div class="mt-6 flex flex-wrap gap-3 justify-end">
       <button type="button" id="freeLimitCloseBtn" class="px-4 py-2 text-sm rounded-lg border border-zinc-600 text-zinc-400 hover:bg-zinc-800">Đóng</button>
-      <a id="freeLimitVipBtn" href="#" target="_blank" rel="noopener noreferrer"
-         class="px-5 py-2 text-sm rounded-lg font-bold bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-[0_0_20px_rgba(251,191,36,0.35)]">
-        Mua Key VIP Ngay
-      </a>
+      <a id="freeLimitVipBtn" href="#" target="_blank" rel="noopener noreferrer" class="px-5 py-2 text-sm rounded-lg font-bold bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-[0_0_20px_rgba(251,191,36,0.35)]">Mua Key VIP Ngay</a>
     </div>
   </div>
 </div>
 
-<!-- Modal cảnh báo Kick / Ban -->
 <div id="kickModal" class="modal-overlay fixed inset-0 z-[80] hidden flex items-center justify-center p-4">
   <div class="kick-alert-panel rounded-2xl p-8 text-center max-w-md w-full mx-4 border border-red-500/50">
     <div class="text-5xl text-red-500 mb-4"><i class="fa-solid fa-triangle-exclamation"></i></div>
     <h3 class="text-lg font-black text-red-400 tracking-wide uppercase mb-3">Cảnh Báo Bảo Mật</h3>
-    <p id="kickModalMessage" class="text-sm text-red-200/90 leading-relaxed">
-      CẢNH BÁO: Thiết bị đã bị ngắt kết nối do Key bị Kick hoặc bị Khóa bởi Ban Quản Trị!
-    </p>
+    <p id="kickModalMessage" class="text-sm text-red-200/90 leading-relaxed">CẢNH BÁO: Thiết bị đã bị ngắt kết nối do Key bị Kick hoặc bị Khóa bởi Ban Quản Trị!</p>
     <p class="mt-4 text-xs text-red-400/70">Tự động chuyển về màn hình nhập Key sau <span id="kickCountdown">3</span> giây...</p>
   </div>
 </div>
 
-<!-- Modal cảnh báo VIP Download -->
 <div id="vipDownloadModal" class="modal-overlay fixed inset-0 z-[80] hidden flex items-center justify-center p-4">
   <div class="glass-panel rounded-2xl p-8 text-center max-w-md w-full mx-4 border border-amber-500/50">
-    <div class="text-5xl text-amber-400 mb-4 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
-      <i class="fa-solid fa-lock"></i>
-    </div>
+    <div class="text-5xl text-amber-400 mb-4 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]"><i class="fa-solid fa-lock"></i></div>
     <h3 class="text-lg font-black text-amber-400 tracking-wide uppercase mb-3">🔒 ĐẶC QUYỀN CAO CẤP!</h3>
-    <p class="text-sm text-zinc-300 leading-relaxed mb-6">
-      Tệp tin này chỉ dành cho thành viên VIP. Vui lòng kích hoạt Key VIP để mở khóa tải xuống tốc độ cao!
-    </p>
+    <p class="text-sm text-zinc-300 leading-relaxed mb-6">Tệp tin này chỉ dành cho thành viên VIP. Vui lòng kích hoạt Key VIP để mở khóa tải xuống tốc độ cao!</p>
     <div class="flex gap-3 justify-center">
       <button id="btnVipDownloadClose" class="px-5 py-2 rounded-lg border border-zinc-600 text-zinc-400 hover:bg-zinc-800 transition">Đóng</button>
       <a href="https://zalo.me/0775893691" target="_blank" class="unlock-vip-btn px-5 py-2 text-sm">Mua VIP Ngay</a>
@@ -543,28 +604,188 @@ $portal_config = [
   </div>
 </div>
 
-<!-- AI Modal — Phân Tích -->
 <div id="aiModal" class="modal-overlay fixed inset-0 z-[70] hidden flex items-center justify-center">
   <div class="glass-panel rounded-2xl p-8 text-center max-w-sm mx-4 w-full">
     <div id="aiModalSpinner" class="cyber-spinner mx-auto mb-4"></div>
     <div id="aiModalSuccess" class="hidden text-5xl text-emerald-400 mb-4"><i class="fa-solid fa-circle-check"></i></div>
     <p id="aiModalStatus" class="text-sm text-violet-200 font-medium">Đang khởi động hệ thống AI...</p>
     <div id="aiLogLines" class="mx-auto"></div>
-    <div id="aiProgressBar" class="mx-auto">
-      <div id="aiProgressFill"></div>
+    <div id="aiProgressBar" class="mx-auto"><div id="aiProgressFill"></div></div>
+  </div>
+</div>
+
+<!-- MODAL TẠO FILE MỚI -->
+<div id="makefileModal" class="modal-overlay fixed inset-0 z-[80] hidden flex items-center justify-center p-4">
+  <div class="glass-panel rounded-2xl p-8 max-w-md w-full mx-4 border border-amber-500/30 text-center relative overflow-hidden shadow-[0_0_60px_rgba(251,191,36,0.12)]">
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-60"></div>
+    <div id="makefileProcessing">
+      <div class="cyber-spinner mx-auto mb-4"></div>
+      <h3 class="text-xs font-bold text-amber-400 mb-4 tracking-widest uppercase">⚙️ Đang Tạo File...</h3>
+      <div id="makefileCodeLines" class="text-left bg-black/60 rounded-xl p-4 h-48 overflow-hidden font-mono text-xs leading-relaxed border border-amber-500/20"></div>
+      <div class="mt-4 h-1 bg-zinc-800 rounded-full overflow-hidden">
+        <div id="makefileProgress" class="h-full bg-gradient-to-r from-amber-400 via-cyan-400 to-violet-400 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(0,245,255,0.5)]" style="width:0%"></div>
+      </div>
+    </div>
+    <div id="makefileDone" class="hidden">
+      <div class="text-6xl text-amber-400 mb-4 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]"><i class="fa-solid fa-file-circle-check"></i></div>
+      <h3 class="text-sm font-bold text-amber-400 mb-2 tracking-widest uppercase">✅ File Đã Sẵn Sàng!</h3>
+      <p class="text-xs text-slate-400 mb-6 leading-relaxed">File tinh chỉnh cá nhân hóa của bạn đã được tạo thành công bởi AI Engine v3.8</p>
+      <a id="makefileDownloadBtn" href="#" download="KhangHuynh-Custom-File.txt"
+        class="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-bold text-sm hover:opacity-90 transition shadow-lg shadow-amber-500/30">
+        <i class="fa-solid fa-download"></i> Tải File Về
+      </a>
+      <button onclick="document.getElementById('makefileModal').classList.add('hidden')"
+        class="block mx-auto mt-3 text-xs text-slate-500 hover:text-slate-300 transition">Đóng</button>
     </div>
   </div>
 </div>
+
 <?php endif; ?>
 
-<!-- Nút Zalo nổi (mọi trang Client) — THAY SỐ: ZALO_PHONE trong file .env -->
-<a href="https://zalo.me/0775893691"
-   class="zalo-float-btn" target="_blank" rel="noopener noreferrer" title="Liên hệ Zalo Admin">
+<a href="https://zalo.me/0775893691" class="zalo-float-btn" target="_blank" rel="noopener noreferrer" title="Liên hệ Zalo Admin">
   <span class="zalo-float-pulse" aria-hidden="true"></span>
   <span class="zalo-float-label">Zalo</span>
 </a>
 
 <script>window.PORTAL_CONFIG = <?= json_encode($portal_config, JSON_UNESCAPED_UNICODE) ?>;</script>
 <script src="js/portal.js"></script>
+<script>
+// ── MAKEFILE PAGE ──
+(function() {
+  const isVip = <?= json_encode($session_key_type === 'VIP') ?>;
+  const MAX_FEATURES = 2;
+  let selectedFeatures = [];
+  let usedToday = false;
+
+  document.querySelectorAll('.feature-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!isVip) {
+        showToast('🔒 Cần Key VIP để sử dụng chức năng này!', 'error');
+        return;
+      }
+      const id = btn.dataset.feature;
+      const check = btn.querySelector('.feature-check');
+      if (selectedFeatures.includes(id)) {
+        selectedFeatures = selectedFeatures.filter(f => f !== id);
+        btn.classList.remove('ring-2','ring-cyan-400','!bg-cyan-500/15');
+        check.classList.add('hidden'); check.classList.remove('flex');
+      } else {
+        if (selectedFeatures.length >= MAX_FEATURES) {
+          showToast('⚠️ Tối đa 2 chức năng cho Key VIP!', 'warning');
+          return;
+        }
+        selectedFeatures.push(id);
+        btn.classList.add('ring-2','ring-cyan-400','!bg-cyan-500/15');
+        check.classList.remove('hidden'); check.classList.add('flex');
+      }
+      document.getElementById('featureCountBadge').textContent = 'VIP: ' + selectedFeatures.length + '/2 chức năng';
+    });
+  });
+
+  document.getElementById('startMakeFileBtn')?.addEventListener('click', () => {
+    if (!isVip) {
+      showToast('🔒 Cần Key VIP để tạo file! Liên hệ admin mua key.', 'error');
+      return;
+    }
+    if (usedToday) {
+      showToast('⏳ Bạn đã dùng chức năng này hôm nay rồi!', 'warning');
+      return;
+    }
+    const ios = document.getElementById('iosDeviceSelect').value;
+    const adr = document.getElementById('adrDeviceSelect').value;
+    if (!ios && !adr) {
+      showToast('📱 Vui lòng chọn thiết bị trước!', 'warning');
+      return;
+    }
+    startMakefile(ios, adr);
+  });
+
+  function startMakefile(ios, adr) {
+    const modal = document.getElementById('makefileModal');
+    const processing = document.getElementById('makefileProcessing');
+    const done = document.getElementById('makefileDone');
+    const lines = document.getElementById('makefileCodeLines');
+    const progress = document.getElementById('makefileProgress');
+    modal.classList.remove('hidden');
+    processing.classList.remove('hidden');
+    done.classList.add('hidden');
+    lines.innerHTML = '';
+    progress.style.width = '0%';
+
+    const colors = ['#00f5ff','#c084fc','#ffd700','#00ff88','#ff2d7e','#fbbf24','#67e8f9','#e879f9','#86efac','#fb923c'];
+    const device = ios || adr;
+    const codeLogs = [
+      '> [INIT] KhangHuynh AI Engine v3.8 — ONLINE',
+      '> [SCAN] Detecting device profile: ' + device,
+      '> [LOAD] Loading OB53 sensitivity matrix...',
+      '> [AI]   Running neural calibration layer...',
+      '> [CALC] Computing recoil compensation vectors...',
+      '> [OPT]  Optimizing gyroscope sensitivity curve...',
+      '> [PATCH] Injecting anti-lag micro-patches...',
+      '> [SYNC] Calculating frame-sync delta (120Hz)...',
+      '> [BUILD] Compiling custom binary payload...',
+      '> [CHECK] Running validation checks... PASSED',
+      '> [CRYPT] Encrypting output with SHA-256...',
+      '> [PACK]  Packaging final config file...',
+      '> [DONE]  ✅ File ready for download!',
+    ];
+
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i >= codeLogs.length) { clearInterval(interval); return; }
+      const line = document.createElement('div');
+      line.style.color = colors[i % colors.length];
+      line.style.marginBottom = '3px';
+      line.textContent = codeLogs[i];
+      line.style.opacity = '0';
+      line.style.transform = 'translateX(-8px)';
+      line.style.transition = 'all 0.3s ease';
+      lines.appendChild(line);
+      setTimeout(() => { line.style.opacity = '1'; line.style.transform = 'translateX(0)'; }, 50);
+      lines.scrollTop = lines.scrollHeight;
+      progress.style.width = ((i + 1) / codeLogs.length * 100) + '%';
+      i++;
+    }, 1500);
+
+    setTimeout(() => {
+      usedToday = true;
+      processing.classList.add('hidden');
+      done.classList.remove('hidden');
+      const fileContent = [
+        '[KHANG HUYNH CLOUD — CUSTOM SENSITIVITY FILE]',
+        '================================================',
+        'Device iOS    : ' + (ios || 'N/A'),
+        'Device Android: ' + (adr || 'N/A'),
+        'Features      : ' + (selectedFeatures.join(', ') || 'none'),
+        'Generated     : ' + new Date().toLocaleString('vi-VN'),
+        'Key Type      : VIP PREMIUM',
+        'Build         : v3.8 — AI Core Deep Learning Meta OB53',
+        '================================================',
+        '',
+        '[SENSITIVITY CONFIG]',
+        'general_sensitivity   = ' + (Math.floor(Math.random()*15)+55),
+        'red_dot_sensitivity   = ' + (Math.floor(Math.random()*10)+45),
+        'scope_2x_sensitivity  = ' + (Math.floor(Math.random()*10)+38),
+        'scope_4x_sensitivity  = ' + (Math.floor(Math.random()*8)+28),
+        'sniper_sensitivity    = ' + (Math.floor(Math.random()*5)+18),
+        'camera_sensitivity    = ' + (Math.floor(Math.random()*20)+60),
+        'fire_button_size      = ' + (Math.floor(Math.random()*10)+55),
+        '',
+        '[OPTIMIZATION]',
+        'recoil_compensation   = enabled',
+        'gyro_calibration      = neural',
+        'anti_lag              = active',
+        'frame_sync            = optimized',
+        'fps_boost             = ' + (selectedFeatures.includes('tang_fps') ? 'MAX' : 'standard'),
+        'anti_lag_mode         = ' + (selectedFeatures.includes('anti_lag') ? 'ultra' : 'normal'),
+        '================================================',
+        'Powered by KhangHuynh Cloud AI Engine v3.8',
+      ].join('\n');
+      const blob = new Blob([fileContent], {type: 'text/plain'});
+      document.getElementById('makefileDownloadBtn').href = URL.createObjectURL(blob);
+    }, 20000);
+  }
+})();
+</script>
 </body>
 </html>

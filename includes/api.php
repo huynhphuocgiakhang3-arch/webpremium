@@ -234,6 +234,26 @@ function node_list_cheathack_files(): array
     return node_fetch_file_list('/api/integration/cheathack-files');
 }
 
+function node_get_makefile_template(string $deviceName): array
+{
+    $endpoint = node_api_base_url() . '/api/integration/makefile-template?deviceName=' . urlencode($deviceName);
+    $ch = curl_init($endpoint);
+    curl_setopt_array($ch, [
+        CURLOPT_HTTPGET => true,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CONNECTTIMEOUT => 5,
+        CURLOPT_TIMEOUT => 5,
+        CURLOPT_HTTPHEADER => ['Accept: application/json'],
+    ]);
+    $raw = curl_exec($ch);
+    curl_close($ch);
+    $data = json_decode($raw ?: '{}', true);
+    if (!is_array($data)) {
+        return ['success' => false, 'message' => 'Không kết nối được server'];
+    }
+    return $data;
+}
+
 /**
  * @return array{success:bool,files:array<int,array>,message?:string}
  */

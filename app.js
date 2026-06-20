@@ -11,6 +11,9 @@ import adminRoutes from './routes/admin.js';
 import integrationRoutes from './routes/integration.js';
 import fileRoutes from './routes/files.js';
 import cheathackRoutes from './routes/cheathack.js';
+import uploadRoutes from './routes/upload.js';
+import musicProxyRoutes from './routes/musicProxy.js';
+import featuresRoutes from './routes/features.js';
 import SystemConfig from './models/SystemConfig.js';
 import { requireDatabase, isDatabaseReady } from './middleware/requireDb.js';
 import {
@@ -67,8 +70,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '200mb' }));
+app.use(express.urlencoded({ extended: true, limit: '200mb' }));
 app.use(cookieParser());
 
 // Debug Network Middleware
@@ -79,6 +82,8 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/css', express.static(path.join(__dirname, 'css')));
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+app.use('/music', express.static(path.join(__dirname, 'public', 'music')));
 
 app.get('/api/health', (req, res) => {
   const ready = isDatabaseReady();
@@ -96,6 +101,9 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/files', fileRoutes);
 app.use('/api/cheathack', cheathackRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/music-proxy', musicProxyRoutes);
+app.use('/api/features', featuresRoutes);
 
 app.use('/api/integration', integrationRoutes);
 if (!OFFLINE_NO_DB) {

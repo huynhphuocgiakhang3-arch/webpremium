@@ -9,6 +9,8 @@ session_start();
 
 header('X-Content-Type-Options: nosniff');
 
+
+
 function portal_json_response(array $data, int $code = 200): void
 {
     http_response_code($code);
@@ -100,6 +102,34 @@ if (isset($_GET['action'])) {
         portal_json_response(['success' => true, 'kicked' => false]);
     }
 
+    if ($action === 'music_config') {
+        try {
+            $cfg_path = __DIR__ . '/public/music/_config.json';
+            if (!file_exists($cfg_path)) {
+                portal_json_response(['success' => true, 'current' => null, 'volume' => 0.3, 'autoplay' => true, 'externalUrl' => '']);
+            }
+            $cfg = json_decode(file_get_contents($cfg_path), true) ?? [];
+            portal_json_response(array_merge(['success' => true, 'current' => null, 'volume' => 0.3, 'autoplay' => true, 'externalUrl' => ''], $cfg));
+        } catch (Throwable $e) {
+            portal_json_response(['success' => true, 'current' => null, 'volume' => 0.3, 'autoplay' => true]);
+        }
+    }
+
+    if ($action === 'makefile_template' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+    if (empty($_SESSION['cloud_key'])) {
+        portal_json_response(['success' => false, 'message' => 'Chưa đăng nhập'], 401);
+    }
+    $deviceName = trim((string) ($_GET['deviceName'] ?? ''));
+    if ($deviceName === '') {
+        portal_json_response(['success' => false, 'message' => 'Thiếu tên thiết bị'], 400);
+    }
+    try {
+        $result = node_get_makefile_template($deviceName);
+        portal_json_response($result);
+    } catch (Throwable $e) {
+        portal_json_response(['success' => false, 'message' => 'Lỗi kết nối server']);
+    }
+}
     if ($action === 'system_files') {
         try {
             $result = node_list_system_files();
@@ -196,6 +226,11 @@ $portal_config = [
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+    .drawer-nav-btn { transition: all 0.2s ease; }
+    #countdownRing { transition: stroke-dashoffset 1s ease; }
+  </style>
 </head>
 <body class="cyber-body min-h-screen">
 <div class="cyber-grid-bg fixed inset-0 z-[-1] pointer-events-none"></div>
@@ -216,68 +251,116 @@ $portal_config = [
 </div>
 
 <?php if (!$is_logged_in): ?>
-<!-- ═══ MÀN HÌNH KHÓA BẢO MẬT ═══ -->
+<!-- ═══ MÀN HÌNH ĐĂNG NHẬP NÂNG CẤP ═══ -->
 <div class="min-h-screen flex flex-col login-hero-wrap">
   <canvas id="particleCanvas" aria-hidden="true"></canvas>
-  <header class="border-b border-indigo-500/20 glass-panel sticky top-0 z-40 login-form-layer">
-    <div class="max-w-4xl mx-auto px-4 py-5 text-center">
-      <h1 class="text-lg sm:text-2xl font-black tracking-[0.2em] neon-title-pulse portal-heading">
-        KHANG HUYNH CLOUD SYSTEM
-      </h1>
-      <div class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-        <div class="glass-panel rounded-lg px-2 py-2"><span class="portal-label text-slate-500">Băng thông</span><br><strong class="text-cyan-400" id="statBw">10 Gbps</strong></div>
-        <div class="glass-panel rounded-lg px-2 py-2"><span class="portal-label text-slate-500">Uptime</span><br><strong class="text-emerald-400">99.9%</strong></div>
-        <div class="glass-panel rounded-lg px-2 py-2"><span class="portal-label text-slate-500">Build</span><br><strong class="text-violet-400">v3.8</strong></div>
-        <div class="glass-panel rounded-lg px-2 py-2"><span class="portal-label text-slate-500">VIP</span><br><strong class="text-amber-400">124.5K+</strong></div>
+
+  <!-- Header nâng cấp -->
+  <header class="border-b border-cyan-500/15 glass-panel sticky top-0 z-40 login-form-layer">
+    <div class="max-w-5xl mx-auto px-4 py-4">
+      <div class="flex flex-col items-center">
+        <h1 class="text-xl sm:text-3xl font-black tracking-[0.25em] neon-title-pulse portal-heading bg-gradient-to-r from-cyan-400 via-violet-400 to-cyan-400 bg-clip-text" style="background-size:200%;animation:gradientShift 4s ease infinite">
+          KHANG HUYNH CLOUD
+        </h1>
+        <p class="text-[10px] text-slate-500 tracking-[0.4em] mt-1 uppercase">AI-Powered Sensitivity System v3.8</p>
       </div>
+
+      <!-- Stats row đẹp hơn -->
+      <div class="mt-4 grid grid-cols-4 gap-2 text-xs max-w-lg mx-auto">
+        <div class="glass-panel rounded-xl px-2 py-2.5 text-center border border-cyan-500/10 hover:border-cyan-500/25 transition">
+          <div class="text-cyan-400 font-bold text-sm">10 Gbps</div>
+          <div class="text-slate-600 text-[10px] mt-0.5">Băng thông</div>
+        </div>
+        <div class="glass-panel rounded-xl px-2 py-2.5 text-center border border-emerald-500/10 hover:border-emerald-500/25 transition">
+          <div class="text-emerald-400 font-bold text-sm">99.9%</div>
+          <div class="text-slate-600 text-[10px] mt-0.5">Uptime</div>
+        </div>
+        <div class="glass-panel rounded-xl px-2 py-2.5 text-center border border-violet-500/10 hover:border-violet-500/25 transition">
+          <div class="text-violet-400 font-bold text-sm">v3.8</div>
+          <div class="text-slate-600 text-[10px] mt-0.5">AI Build</div>
+        </div>
+        <div class="glass-panel rounded-xl px-2 py-2.5 text-center border border-amber-500/10 hover:border-amber-500/25 transition">
+          <div class="text-amber-400 font-bold text-sm">124K+</div>
+          <div class="text-slate-600 text-[10px] mt-0.5">VIP Users</div>
+        </div>
+      </div>
+
+      <!-- Live ticker -->
       <div class="live-notify-bar mt-3 login-form-layer">
         <div class="live-notify-track">
-          <span class="live-notify-text">⚡ [Hệ thống Cloud] Hơn 1,420 người dùng VIP đang kích hoạt độ nhạy thành công trong hôm nay.</span>
-          <span class="live-notify-text" aria-hidden="true">⚡ [Hệ thống Cloud] Hơn 1,420 người dùng VIP đang kích hoạt độ nhạy thành công trong hôm nay.</span>
+          <span class="live-notify-text">⚡ [LIVE] 1,420 người dùng VIP đang kích hoạt thành công &nbsp;&nbsp;|&nbsp;&nbsp; 🔒 Hệ thống bảo mật SHA-256 đang hoạt động &nbsp;&nbsp;|&nbsp;&nbsp; 🤖 AI Engine OB53 v3.8 — ONLINE 100%</span>
+          <span class="live-notify-text" aria-hidden="true">⚡ [LIVE] 1,420 người dùng VIP đang kích hoạt thành công &nbsp;&nbsp;|&nbsp;&nbsp; 🔒 Hệ thống bảo mật SHA-256 đang hoạt động &nbsp;&nbsp;|&nbsp;&nbsp; 🤖 AI Engine OB53 v3.8 — ONLINE 100%</span>
         </div>
       </div>
     </div>
   </header>
 
   <main class="flex-1 flex items-center justify-center p-4 login-form-layer">
-    <div class="w-full max-w-md glass-panel rounded-2xl p-8 shadow-2xl">
-      <div class="text-center mb-6">
-        <div class="inline-flex w-16 h-16 rounded-full border border-cyan-500/40 items-center justify-center mb-4">
-          <i class="fa-solid fa-shield-halved text-2xl text-cyan-400"></i>
-        </div>
-        <h2 class="text-sm font-bold tracking-wide portal-heading">CẤP PHÉP ỦY QUYỀN CHÍNH THỨC — ADMIN KHANG HUYNH</h2>
-        <p class="mt-3 text-xs portal-label text-slate-400 leading-relaxed">
-          Vui lòng nhập Khóa mã hóa truy cập (Key) để tiếp tục quy trình định danh thiết bị.
-        </p>
-      </div>
+    <div class="w-full max-w-md">
+      <!-- Card đăng nhập nâng cấp -->
+      <div class="glass-panel rounded-3xl p-8 shadow-2xl border border-cyan-500/15 relative overflow-hidden"
+           style="box-shadow:0 0 60px rgba(0,245,255,0.06),0 25px 50px rgba(0,0,0,0.5)">
+        <!-- Top glow line -->
+        <div class="absolute top-0 left-0 right-0 h-px" style="background:linear-gradient(90deg,transparent,rgba(0,245,255,0.6),transparent)"></div>
 
-      <form id="loginForm" class="space-y-4">
-        <div class="relative">
-          <label class="text-xs portal-label text-slate-500 uppercase tracking-wider">Mã Key truy cập</label>
-          <div class="key-conic-wrap">
-            <div class="animated-neon-border rounded-xl">
-        <div class="flex relative z-10 bg-zinc-950/50 rounded-xl overflow-hidden backdrop-blur-md">
-          <input type="text" id="keyInput" name="keyString" placeholder="Nhập Key kích hoạt..." required
-            class="flex-1 bg-transparent px-4 py-3 text-cyan-300 font-mono focus:outline-none placeholder-zinc-600 border-none ring-0">
-          <button type="submit"
-            class="px-6 py-3 bg-cyan-600/20 text-cyan-400 font-bold border-l border-cyan-500/30 hover:bg-cyan-500/30 transition-colors">
-            KÍCH HOẠT
-          </button>
+        <div class="text-center mb-7">
+          <!-- Animated shield icon -->
+          <div class="relative inline-flex w-20 h-20 rounded-full items-center justify-center mb-4"
+               style="background:linear-gradient(135deg,rgba(0,245,255,0.1),rgba(192,132,252,0.1));border:1px solid rgba(0,245,255,0.25);box-shadow:0 0 30px rgba(0,245,255,0.1)">
+            <i class="fa-solid fa-shield-halved text-3xl text-cyan-400" style="filter:drop-shadow(0 0 8px rgba(0,245,255,0.5))"></i>
+            <div class="absolute inset-0 rounded-full animate-ping opacity-10" style="background:rgba(0,245,255,0.3);animation-duration:3s"></div>
+          </div>
+          <h2 class="text-base font-black tracking-widest text-cyan-300 uppercase">Xác Thực Bảo Mật</h2>
+          <p class="mt-2 text-xs text-slate-500 leading-relaxed">Nhập Key kích hoạt để truy cập hệ thống Cloud</p>
         </div>
-      </div>
+
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label class="text-[10px] text-slate-500 uppercase tracking-widest block mb-2">Mã Key Truy Cập</label>
+            <div class="key-conic-wrap">
+              <div class="animated-neon-border rounded-xl">
+                <div class="flex relative z-10 bg-zinc-950/60 rounded-xl overflow-hidden backdrop-blur-md">
+                  <input type="text" id="keyInput" name="keyString" placeholder="Nhập Key kích hoạt..." required
+                    class="flex-1 bg-transparent px-4 py-3.5 text-cyan-300 font-mono text-sm focus:outline-none placeholder-zinc-600 border-none ring-0">
+                  <button type="submit"
+                    class="px-5 py-3 font-bold text-xs tracking-wider border-l border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/15 transition-all">
+                    ➤
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p id="loginError" class="text-sm text-red-400 hidden text-center"></p>
+          <button type="submit"
+            class="w-full rounded-xl py-4 font-black text-sm tracking-widest text-black transition-all hover:opacity-90 hover:scale-[1.01] active:scale-[0.99]"
+            style="background:linear-gradient(135deg,#00f5ff,#7c3aed,#00f5ff);background-size:200%;animation:gradientShift 3s ease infinite;box-shadow:0 0 24px rgba(0,245,255,0.25)">
+            KÍCH HOẠT HỆ THỐNG
+          </button>
+        </form>
+
+        <!-- Features mini list -->
+        <div class="mt-6 grid grid-cols-3 gap-2 text-center">
+          <div class="rounded-lg py-2 px-1" style="background:rgba(0,245,255,0.04);border:1px solid rgba(0,245,255,0.08)">
+            <i class="fa-solid fa-bolt text-amber-400 text-xs mb-1 block"></i>
+            <span class="text-[9px] text-slate-500">AI Phân tích</span>
+          </div>
+          <div class="rounded-lg py-2 px-1" style="background:rgba(192,132,252,0.04);border:1px solid rgba(192,132,252,0.08)">
+            <i class="fa-solid fa-file-code text-violet-400 text-xs mb-1 block"></i>
+            <span class="text-[9px] text-slate-500">File Cloud</span>
+          </div>
+          <div class="rounded-lg py-2 px-1" style="background:rgba(251,191,36,0.04);border:1px solid rgba(251,191,36,0.08)">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-400 text-xs mb-1 block"></i>
+            <span class="text-[9px] text-slate-500">Make File</span>
           </div>
         </div>
-        <p id="loginError" class="text-sm text-red-400 hidden"></p>
-        <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 py-3.5 font-bold text-white hover:opacity-90 transition shadow-lg shadow-cyan-500/20">
-          Tiếp Tục Quy Trình
-        </button>
-      </form>
 
-      <p class="mt-6 text-center">
-        <a href="https://zalo.me/0775893691" target="_blank" rel="noopener" class="zalo-link text-sm font-semibold">
-          <i class="fa-brands fa-telegram mr-1"></i> Liên Hệ Admin Mua Key
-        </a>
-      </p>
+        <p class="mt-5 text-center">
+          
+<a href="https://zalo.me/0775893691" target="_blank" rel="noopener" class="zalo-link text-xs font-semibold inline-flex items-center gap-2">
+            <i class="fa-brands fa-telegram"></i> Liên hệ Admin mua Key VIP
+          </a>
+        </p>
+      </div>
     </div>
   </main>
 </div>
@@ -294,44 +377,140 @@ $portal_config = [
 <?php else: ?>
 <!-- ═══ DASHBOARD SAU ĐĂNG NHẬP ═══ -->
 <div id="drawerBackdrop" class="drawer-backdrop fixed inset-0 z-40"></div>
-<aside id="drawer" class="drawer-panel fixed top-0 left-0 h-full w-64 glass-panel z-50 pt-16 px-4">
-  <nav class="space-y-2">
-    <button data-page="account" class="w-full text-left px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-cyan-400 flex items-center gap-2">
-      <i class="fa-solid fa-id-card"></i> Tài Khoản
+<aside id="drawer" class="drawer-panel fixed top-0 left-0 h-full w-64 glass-panel z-50 flex flex-col"
+  style="border-right:1px solid rgba(0,245,255,0.08);box-shadow:4px 0 24px rgba(0,0,0,0.4)">
+  <!-- Drawer header -->
+  <div class="px-5 pt-6 pb-4 border-b border-cyan-500/10">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+           style="background:linear-gradient(135deg,rgba(0,245,255,0.15),rgba(124,58,237,0.15));border:1px solid rgba(0,245,255,0.2)">
+        <i class="fa-solid fa-shield-halved text-cyan-400 text-sm"></i>
+      </div>
+      <div>
+        <div class="text-xs font-bold text-cyan-300 tracking-wider">KHANG HUYNH</div>
+        <div class="text-[9px] text-slate-600">Cloud System v3.8</div>
+      </div>
+    </div>
+    <!-- Key type badge -->
+    <div class="mt-3 rounded-lg py-2 px-3 text-center text-[10px] font-bold tracking-widest
+      <?= $session_key_type === 'VIP' ? 'text-amber-400' : 'text-emerald-400' ?>"
+      style="background:<?= $session_key_type === 'VIP' ? 'rgba(251,191,36,0.08)' : 'rgba(52,211,153,0.08)' ?>;
+             border:1px solid <?= $session_key_type === 'VIP' ? 'rgba(251,191,36,0.2)' : 'rgba(52,211,153,0.2)' ?>">
+      <?= $session_key_type === 'VIP' ? '👑 VIP PREMIUM' : '🎫 MEMBER FREE' ?>
+    </div>
+  </div>
+  <!-- Nav items -->
+  <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+    <button data-page="account" class="drawer-nav-btn w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 text-sm transition-all group text-cyan-400" style="background:rgba(0,245,255,0.08);border:1px solid rgba(0,245,255,0.15)">
+      <i class="fa-solid fa-id-card text-cyan-400 group-hover:scale-110 transition-transform"></i>
+      <span class="font-semibold">Tài Khoản</span>
     </button>
-    <button data-page="ai" class="w-full text-left px-4 py-3 rounded-lg hover:bg-violet-500/10 text-slate-300 flex items-center gap-2">
-      <i class="fa-solid fa-microchip"></i> Phân Tích AI
+    <button data-page="ai" class="drawer-nav-btn w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 text-sm transition-all text-slate-400 hover:text-violet-300 hover:bg-violet-500/8 border border-transparent hover:border-violet-500/15">
+      <i class="fa-solid fa-microchip"></i>
+      <span>Phân Tích AI</span>
     </button>
-    <button data-page="files" class="w-full text-left px-4 py-3 rounded-lg hover:bg-emerald-500/10 text-slate-300 flex items-center gap-2">
-      <i class="fa-solid fa-file-code"></i> File Tinh Chỉnh Hệ Thống
+    <button data-page="files" class="drawer-nav-btn w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 text-sm transition-all text-slate-400 hover:text-emerald-300 hover:bg-emerald-500/8 border border-transparent hover:border-emerald-500/15">
+      <i class="fa-solid fa-file-code"></i>
+      <span>File Tinh Chỉnh</span>
     </button>
-    <button data-page="cheathack" class="w-full text-left px-4 py-3 rounded-lg hover:bg-fuchsia-500/10 text-slate-300 flex items-center gap-2">
-      <i class="fa-solid fa-gamepad"></i> CheatHack - Pmt3
+    <button data-page="cheathack" class="drawer-nav-btn w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 text-sm transition-all text-slate-400 hover:text-fuchsia-300 hover:bg-fuchsia-500/8 border border-transparent hover:border-fuchsia-500/15">
+      <i class="fa-solid fa-gamepad"></i>
+      <span>CheatHack - Pmt3</span>
     </button>
-    <button data-page="makefile" class="w-full text-left px-4 py-3 rounded-lg hover:bg-amber-500/10 text-amber-400 flex items-center gap-2">
-      <i class="fa-solid fa-wand-magic-sparkles"></i> File Make Theo Yêu Cầu
+    <button data-page="makefile" class="drawer-nav-btn w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 text-sm transition-all text-amber-400 hover:bg-amber-500/8 border border-transparent hover:border-amber-500/15">
+      <i class="fa-solid fa-wand-magic-sparkles"></i>
+      <span class="font-semibold">Make File</span>
+      <span class="ml-auto text-[9px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/25">HOT</span>
     </button>
   </nav>
-  <form method="POST" action="activate.php" class="mt-8">
-    <input type="hidden" name="action" value="logout">
-    <button type="submit" class="text-xs text-slate-500 hover:text-red-400"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
-  </form>
+  <!-- Drawer footer -->
+  <div class="px-4 py-4 border-t border-cyan-500/10">
+    <form method="POST" action="activate.php">
+      <input type="hidden" name="action" value="logout">
+      <button type="submit" class="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs text-slate-500 hover:text-red-400 hover:bg-red-500/8 transition border border-transparent hover:border-red-500/15">
+        <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+      </button>
+    </form>
+  </div>
 </aside>
 
-<header class="glass-panel border-b border-cyan-500/20 sticky top-0 z-30 px-4 py-3 flex items-center gap-4">
-  <button id="menuBtn" class="text-cyan-400 text-xl p-2"><i class="fa-solid fa-bars"></i></button>
-  <span class="font-bold text-cyan-300 tracking-wider text-sm">KHANG HUYNH CLOUD</span>
+<header class="glass-panel border-b border-cyan-500/10 sticky top-0 z-30 px-4 py-3 flex items-center justify-between gap-4"
+  style="box-shadow:0 2px 20px rgba(0,0,0,0.3)">
+  <div class="flex items-center gap-3">
+    <button id="menuBtn" class="text-cyan-400 text-lg p-2 rounded-lg hover:bg-cyan-500/10 transition"><i class="fa-solid fa-bars"></i></button>
+    <div>
+      <span class="font-black text-cyan-300 tracking-widest text-sm">KHANG HUYNH</span>
+      <span class="text-slate-600 text-xs ml-2">CLOUD v3.8</span>
+    </div>
+  </div>
+  <!-- Right side: key badge + ping -->
+  <div class="flex items-center gap-3">
+    <div class="flex items-center gap-1.5 text-[10px] text-emerald-400">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="hidden sm:inline">ONLINE</span>
+    </div>
+    <span class="text-[10px] font-bold px-2.5 py-1 rounded-lg
+      <?= $session_key_type === 'VIP' ? 'text-amber-400' : 'text-emerald-400' ?>"
+      style="background:<?= $session_key_type === 'VIP' ? 'rgba(251,191,36,0.1)' : 'rgba(52,211,153,0.1)' ?>;
+             border:1px solid <?= $session_key_type === 'VIP' ? 'rgba(251,191,36,0.25)' : 'rgba(52,211,153,0.25)' ?>">
+      <?= $session_key_type === 'VIP' ? '👑 VIP' : '🎫 FREE' ?>
+    </span>
+  </div>
 </header>
 
 <main class="max-w-4xl mx-auto p-4 pb-16">
 
-  <!-- MỤC 1: TÀI KHOẢN -->
+  <!-- NOTIFICATION POPUP -->
+  <div id="notifPopupWrap" class="fixed inset-0 z-[200] hidden flex items-end justify-center p-4 pointer-events-none">
+    <div id="notifPopupBox" class="pointer-events-auto w-full max-w-sm rounded-2xl p-5 shadow-2xl border"
+      style="background:linear-gradient(135deg,rgba(14,20,42,0.98),rgba(8,12,28,0.99));backdrop-filter:blur(20px);transform:translateY(100px);opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1)">
+      <div class="flex items-start gap-3">
+        <div id="notifPopupIcon" class="text-2xl shrink-0">📢</div>
+        <div class="flex-1 min-w-0">
+          <p id="notifPopupTitle" class="text-sm font-bold text-white mb-1">Thông báo</p>
+          <p id="notifPopupMsg" class="text-xs text-zinc-400 leading-relaxed"></p>
+        </div>
+        <button onclick="closeNotifPopup()" class="text-zinc-600 hover:text-zinc-300 shrink-0 text-lg leading-none">×</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MỤC 1: TÀI KHOẢN NÂNG CẤP -->
   <section id="page-account" class="page-section active">
     <div class="grid md:grid-cols-3 gap-4">
-      <div class="md:col-span-1 glass-panel rounded-xl p-4 border border-violet-500/30">
-        <p class="text-xs text-slate-500 uppercase tracking-wider">Tời gian còn lại</p>
-        <p id="countdown" class="text-lg font-mono font-bold text-violet-300 mt-2">--:--:--</p>
-        <p class="text-xs text-slate-600 mt-1">~<?= (int) $session_days_left ?> ngày</p>
+      <!-- Countdown dạng vòng tròn -->
+      <div class="md:col-span-1 glass-panel rounded-2xl p-5 border border-violet-500/25 flex flex-col items-center justify-center text-center"
+           style="box-shadow:0 0 30px rgba(192,132,252,0.05)">
+        <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-3">Thời Gian Còn Lại</p>
+        <!-- SVG circular countdown -->
+        <div class="relative w-28 h-28 mb-3">
+          <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(192,132,252,0.1)" stroke-width="6"/>
+            <circle id="countdownRing" cx="50" cy="50" r="42" fill="none" stroke="url(#ringGrad)" stroke-width="6"
+              stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="0" style="transition:stroke-dashoffset 1s ease"/>
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#7c3aed"/>
+                <stop offset="100%" stop-color="#00f5ff"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <p id="countdown" class="text-sm font-mono font-bold text-violet-300 leading-tight">--:--:--</p>
+            <p class="text-[9px] text-slate-600 mt-0.5"><?= (int) $session_days_left ?>d còn lại</p>
+          </div>
+        </div>
+        <!-- Mini stats -->
+        <div class="w-full grid grid-cols-2 gap-2 mt-1">
+          <div class="rounded-lg py-1.5 text-center" style="background:rgba(0,245,255,0.06);border:1px solid rgba(0,245,255,0.1)">
+            <div class="text-cyan-400 font-bold text-xs">Active</div>
+            <div class="text-slate-600 text-[9px]">Trạng thái</div>
+          </div>
+          <div class="rounded-lg py-1.5 text-center" style="background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.1)">
+            <div class="text-emerald-400 font-bold text-xs">100%</div>
+            <div class="text-slate-600 text-[9px]">Bảo mật</div>
+          </div>
+        </div>
       </div>
       <div class="md:col-span-2 digital-id rounded-2xl p-6">
         <div class="flex flex-wrap justify-between items-start gap-4 relative z-10">
@@ -403,6 +582,21 @@ $portal_config = [
       </div>
     </div>
   </section>
+
+  <!-- THÔNG BÁO NEON -->
+  <div id="notifNeonWrap" style="display:none;max-width:900px;margin:0 auto 20px;padding:0 16px">
+    <style>
+      @keyframes neonPulse{0%,100%{box-shadow:0 0 8px rgba(0,245,255,.4),0 0 20px rgba(0,245,255,.15);border-color:rgba(0,245,255,.5)}50%{box-shadow:0 0 18px rgba(0,245,255,.8),0 0 40px rgba(0,245,255,.3);border-color:rgba(0,245,255,.95)}}
+      @keyframes neonPulseG{0%,100%{box-shadow:0 0 8px rgba(52,211,153,.4),0 0 20px rgba(52,211,153,.15);border-color:rgba(52,211,153,.5)}50%{box-shadow:0 0 18px rgba(52,211,153,.8),0 0 40px rgba(52,211,153,.3);border-color:rgba(52,211,153,.95)}}
+      @keyframes neonPulseY{0%,100%{box-shadow:0 0 8px rgba(251,191,36,.4),0 0 20px rgba(251,191,36,.15);border-color:rgba(251,191,36,.5)}50%{box-shadow:0 0 18px rgba(251,191,36,.8),0 0 40px rgba(251,191,36,.3);border-color:rgba(251,191,36,.95)}}
+      @keyframes neonPulseR{0%,100%{box-shadow:0 0 8px rgba(244,63,94,.4),0 0 20px rgba(244,63,94,.15);border-color:rgba(244,63,94,.5)}50%{box-shadow:0 0 18px rgba(244,63,94,.8),0 0 40px rgba(244,63,94,.3);border-color:rgba(244,63,94,.95)}}
+      .nn-info{background:rgba(0,245,255,.05);border:1px solid;border-radius:14px;padding:14px 16px;animation:neonPulse 2.5s ease infinite}
+      .nn-success{background:rgba(52,211,153,.05);border:1px solid;border-radius:14px;padding:14px 16px;animation:neonPulseG 2.5s ease infinite}
+      .nn-warning{background:rgba(251,191,36,.05);border:1px solid;border-radius:14px;padding:14px 16px;animation:neonPulseY 2.5s ease infinite}
+      .nn-danger{background:rgba(244,63,94,.05);border:1px solid;border-radius:14px;padding:14px 16px;animation:neonPulseR 2.5s ease infinite}
+    </style>
+    <div id="notifNeonList" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
 
   <!-- MỤC 2: PHÂN TÍCH AI -->
   <section id="page-ai" class="page-section">
@@ -561,11 +755,16 @@ $portal_config = [
       </p>
     </div>
 
-    <!-- NÚT TẠO FILE -->
+    <!-- NÚT TẠO FILE NÂNG CẤP -->
     <div class="text-center">
-      <button id="startMakeFileBtn" class="btn-cyber-primary px-10 py-4 rounded-xl text-sm">
-        <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Bắt Đầu Tạo File
+      <button id="startMakeFileBtn"
+        class="relative inline-flex items-center gap-3 px-12 py-4 rounded-2xl font-black text-sm tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98]"
+        style="background:linear-gradient(135deg,rgba(251,191,36,0.9),rgba(245,158,11,0.8));color:#000;box-shadow:0 0 40px rgba(251,191,36,0.25),0 8px 24px rgba(0,0,0,0.3)">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>Bắt Đầu Tạo File</span>
+        <span class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 animate-ping opacity-75"></span>
       </button>
+      <p class="text-[10px] text-slate-600 mt-3 font-mono">Giới hạn 1 lần/ngày · Chỉ dành cho Key VIP</p>
     </div>
   </section>
 
@@ -614,33 +813,69 @@ $portal_config = [
   </div>
 </div>
 
-<!-- MODAL TẠO FILE MỚI -->
+<!-- MODAL TẠO FILE NÂNG CẤP -->
 <div id="makefileModal" class="modal-overlay fixed inset-0 z-[80] hidden flex items-center justify-center p-4">
-  <div class="glass-panel rounded-2xl p-8 max-w-md w-full mx-4 border border-amber-500/30 text-center relative overflow-hidden shadow-[0_0_60px_rgba(251,191,36,0.12)]">
-    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-60"></div>
-    <div id="makefileProcessing">
-      <div class="cyber-spinner mx-auto mb-4"></div>
-      <h3 class="text-xs font-bold text-amber-400 mb-4 tracking-widest uppercase">⚙️ Đang Tạo File...</h3>
-      <div id="makefileCodeLines" class="text-left bg-black/60 rounded-xl p-4 h-48 overflow-hidden font-mono text-xs leading-relaxed border border-amber-500/20"></div>
-      <div class="mt-4 h-1 bg-zinc-800 rounded-full overflow-hidden">
-        <div id="makefileProgress" class="h-full bg-gradient-to-r from-amber-400 via-cyan-400 to-violet-400 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(0,245,255,0.5)]" style="width:0%"></div>
+  <div class="w-full max-w-md mx-4 relative" style="filter:drop-shadow(0 0 40px rgba(251,191,36,0.15))">
+    <div class="glass-panel rounded-3xl p-7 border text-center relative overflow-hidden"
+         style="border-color:rgba(251,191,36,0.2);background:linear-gradient(135deg,rgba(14,20,42,0.97),rgba(8,12,28,0.99))">
+      <!-- Animated top border -->
+      <div class="absolute top-0 left-0 right-0 h-0.5 rounded-t-3xl overflow-hidden">
+        <div style="height:100%;background:linear-gradient(90deg,transparent,#fbbf24,#00f5ff,#c084fc,transparent);animation:gradientShift 2s linear infinite;background-size:200%"></div>
       </div>
-    </div>
-    <div id="makefileDone" class="hidden">
-      <div class="text-6xl text-amber-400 mb-4 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]"><i class="fa-solid fa-file-circle-check"></i></div>
-      <h3 class="text-sm font-bold text-amber-400 mb-2 tracking-widest uppercase">✅ File Đã Sẵn Sàng!</h3>
-      <p class="text-xs text-slate-400 mb-6 leading-relaxed">File tinh chỉnh cá nhân hóa của bạn đã được tạo thành công bởi AI Engine v3.8</p>
-      <a id="makefileDownloadBtn" href="#" download="KhangHuynh-Custom-File.txt"
-        class="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-bold text-sm hover:opacity-90 transition shadow-lg shadow-amber-500/30">
-        <i class="fa-solid fa-download"></i> Tải File Về
-      </a>
-      <button onclick="document.getElementById('makefileModal').classList.add('hidden')"
-        class="block mx-auto mt-3 text-xs text-slate-500 hover:text-slate-300 transition">Đóng</button>
+
+      <!-- PROCESSING STATE -->
+      <div id="makefileProcessing">
+        <div class="relative inline-flex mb-5">
+          <div class="cyber-spinner"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <i class="fa-solid fa-microchip text-amber-400 text-sm"></i>
+          </div>
+        </div>
+        <h3 class="text-xs font-black text-amber-400 mb-1 tracking-[0.2em] uppercase">⚙️ AI Engine Processing</h3>
+        <p class="text-[10px] text-slate-600 mb-4 font-mono">KhangHuynh Cloud v3.8 — Đang xử lý...</p>
+        <!-- Terminal log -->
+        <div id="makefileCodeLines"
+          class="text-left rounded-2xl p-4 h-52 overflow-hidden font-mono text-[11px] leading-relaxed"
+          style="background:rgba(0,0,0,0.7);border:1px solid rgba(251,191,36,0.15)"></div>
+        <!-- Progress bar -->
+        <div class="mt-4 relative">
+          <div class="h-1.5 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.06)">
+            <div id="makefileProgress"
+              class="h-full rounded-full transition-all duration-500"
+              style="width:0%;background:linear-gradient(90deg,#fbbf24,#00f5ff,#c084fc);box-shadow:0 0 12px rgba(0,245,255,0.4)"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DONE STATE -->
+      <div id="makefileDone" class="hidden">
+        <div class="relative inline-flex mb-5">
+          <div class="text-7xl text-amber-400" style="filter:drop-shadow(0 0 24px rgba(251,191,36,0.5))">
+            <i class="fa-solid fa-file-circle-check"></i>
+          </div>
+          <div class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center" style="box-shadow:0 0 10px rgba(52,211,153,0.5)">
+            <i class="fa-solid fa-check text-[9px] text-black"></i>
+          </div>
+        </div>
+        <h3 class="text-base font-black text-amber-400 mb-1 tracking-widest">FILE SẴN SÀNG!</h3>
+        <p class="text-xs text-slate-500 mb-6 leading-relaxed">AI Engine đã tối ưu hóa file tinh chỉnh<br>cá nhân hóa cho thiết bị của bạn</p>
+        <a id="makefileDownloadBtn" href="#" download="KhangHuynh-Custom-File.txt"
+          class="inline-flex items-center gap-3 px-10 py-3.5 rounded-2xl font-black text-sm text-black hover:opacity-90 hover:scale-[1.02] transition-all"
+          style="background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 0 24px rgba(251,191,36,0.35)">
+          <i class="fa-solid fa-download"></i> Tải File Về
+        </a>
+        <button onclick="document.getElementById('makefileModal').classList.add('hidden')"
+          class="block mx-auto mt-3 text-xs text-slate-600 hover:text-slate-400 transition">
+          <i class="fa-solid fa-xmark mr-1"></i>Đóng
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
 <?php endif; ?>
+
+
 
 <a href="https://zalo.me/0775893691" class="zalo-float-btn" target="_blank" rel="noopener noreferrer" title="Liên hệ Zalo Admin">
   <span class="zalo-float-pulse" aria-hidden="true"></span>
@@ -649,6 +884,47 @@ $portal_config = [
 
 <script>window.PORTAL_CONFIG = <?= json_encode($portal_config, JSON_UNESCAPED_UNICODE) ?>;</script>
 <script src="js/portal.js"></script>
+<script>
+// ── Circular countdown ring ──
+(function() {
+  const ring = document.getElementById('countdownRing');
+  if (!ring) return;
+  const expiredAt = '<?= $session_expired_at ?>';
+  if (!expiredAt) return;
+  const expMs = new Date(expiredAt).getTime();
+  const totalDays = <?= max(1, (int)$session_days_left) ?>;
+  const totalMs = totalDays * 24 * 3600 * 1000;
+  const circumference = 264;
+  function updateRing() {
+    const remainMs = Math.max(0, expMs - Date.now());
+    const pct = remainMs / totalMs;
+    ring.style.strokeDashoffset = circumference * (1 - pct);
+    const color = pct > 0.5 ? '#34d399' : pct > 0.2 ? '#fbbf24' : '#f43f5e';
+    ring.style.stroke = color;
+  }
+  updateRing();
+  setInterval(updateRing, 10000);
+})();
+
+// ── Active drawer nav highlight ──
+(function() {
+  document.querySelectorAll('.drawer-nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.drawer-nav-btn').forEach(b => {
+        b.style.background = '';
+        b.style.border = '1px solid transparent';
+      });
+      const page = btn.dataset.page;
+      const colors = {account:'rgba(0,245,255,0.08)',ai:'rgba(124,58,237,0.08)',files:'rgba(52,211,153,0.08)',cheathack:'rgba(217,70,239,0.08)',makefile:'rgba(251,191,36,0.08)'};
+      const borders = {account:'rgba(0,245,255,0.2)',ai:'rgba(124,58,237,0.2)',files:'rgba(52,211,153,0.2)',cheathack:'rgba(217,70,239,0.2)',makefile:'rgba(251,191,36,0.2)'};
+      if (colors[page]) {
+        btn.style.background = colors[page];
+        btn.style.border = `1px solid ${borders[page]}`;
+      }
+    });
+  });
+})();
+</script>
 <script>
 // ── MAKEFILE PAGE ──
 (function() {
@@ -700,7 +976,7 @@ $portal_config = [
     startMakefile(ios, adr);
   });
 
-  function startMakefile(ios, adr) {
+  async function startMakefile(ios, adr) {
     const modal = document.getElementById('makefileModal');
     const processing = document.getElementById('makefileProcessing');
     const done = document.getElementById('makefileDone');
@@ -727,7 +1003,7 @@ $portal_config = [
       '> [CHECK] Running validation checks... PASSED',
       '> [CRYPT] Encrypting output with SHA-256...',
       '> [PACK]  Packaging final config file...',
-      '> [DONE]  ✅ File ready for download!',
+      '> [FETCH] Fetching personalized file from Cloud...',
     ];
 
     let i = 0;
@@ -747,44 +1023,150 @@ $portal_config = [
       i++;
     }, 1500);
 
-    setTimeout(() => {
-      usedToday = true;
-      processing.classList.add('hidden');
-      done.classList.remove('hidden');
-      const fileContent = [
-        '[KHANG HUYNH CLOUD — CUSTOM SENSITIVITY FILE]',
-        '================================================',
-        'Device iOS    : ' + (ios || 'N/A'),
-        'Device Android: ' + (adr || 'N/A'),
-        'Features      : ' + (selectedFeatures.join(', ') || 'none'),
-        'Generated     : ' + new Date().toLocaleString('vi-VN'),
-        'Key Type      : VIP PREMIUM',
-        'Build         : v3.8 — AI Core Deep Learning Meta OB53',
-        '================================================',
-        '',
-        '[SENSITIVITY CONFIG]',
-        'general_sensitivity   = ' + (Math.floor(Math.random()*15)+55),
-        'red_dot_sensitivity   = ' + (Math.floor(Math.random()*10)+45),
-        'scope_2x_sensitivity  = ' + (Math.floor(Math.random()*10)+38),
-        'scope_4x_sensitivity  = ' + (Math.floor(Math.random()*8)+28),
-        'sniper_sensitivity    = ' + (Math.floor(Math.random()*5)+18),
-        'camera_sensitivity    = ' + (Math.floor(Math.random()*20)+60),
-        'fire_button_size      = ' + (Math.floor(Math.random()*10)+55),
-        '',
-        '[OPTIMIZATION]',
-        'recoil_compensation   = enabled',
-        'gyro_calibration      = neural',
-        'anti_lag              = active',
-        'frame_sync            = optimized',
-        'fps_boost             = ' + (selectedFeatures.includes('tang_fps') ? 'MAX' : 'standard'),
-        'anti_lag_mode         = ' + (selectedFeatures.includes('anti_lag') ? 'ultra' : 'normal'),
-        '================================================',
-        'Powered by KhangHuynh Cloud AI Engine v3.8',
-      ].join('\n');
-      const blob = new Blob([fileContent], {type: 'text/plain'});
-      document.getElementById('makefileDownloadBtn').href = URL.createObjectURL(blob);
-    }, 20000);
+    let realLink = null;
+    let errorMsg = null;
+    try {
+      const res = await fetch('activate.php?action=makefile_template&deviceName=' + encodeURIComponent(device));
+      const data = await res.json();
+      if (data.success && data.downloadLink) {
+        realLink = data.downloadLink;
+      } else {
+        errorMsg = data.message || 'Admin chưa upload file cho thiết bị này!';
+      }
+    } catch (e) {
+      errorMsg = 'Không kết nối được server. Thử lại sau!';
+    }
+
+    const minWait = codeLogs.length * 1500 + 800;
+setTimeout(() => {
+  clearInterval(interval);
+  progress.style.width = '100%';
+  usedToday = true;
+  processing.classList.add('hidden');
+  done.classList.remove('hidden');
+  if (realLink) {
+        const btn = document.getElementById('makefileDownloadBtn');
+        btn.href = realLink;
+        btn.removeAttribute('download');
+        btn.target = '_blank';
+        btn.textContent = '⬇️ Tải File Về';
+      } else {
+        done.innerHTML = `
+          <div class="text-5xl text-red-400 mb-4"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <h3 class="text-sm font-bold text-red-400 mb-2">⚠️ Chưa Có File!</h3>
+          <p class="text-xs text-slate-400 mb-6">${errorMsg}</p>
+          <button onclick="document.getElementById('makefileModal').classList.add('hidden')"
+            class="px-8 py-3 rounded-xl bg-zinc-700 text-white font-bold text-sm">Đóng</button>
+        `;
+      }
+    }, minWait);
   }
+})();
+</script>
+<script>
+// ══ THÔNG BÁO TỰ ĐỘNG ══
+(function() {
+  const icons = {info:'ℹ️', success:'✅', warning:'⚠️', danger:'🚨'};
+  const colors = {
+    info: 'rgba(0,245,255,0.2)',
+    success: 'rgba(52,211,153,0.2)',
+    warning: 'rgba(251,191,36,0.2)',
+    danger: 'rgba(244,63,94,0.2)'
+  };
+  let queue = [];
+  let showing = false;
+
+  function showNext() {
+    if (!queue.length || showing) return;
+    showing = true;
+    const n = queue.shift();
+    const wrap = document.getElementById('notifPopupWrap');
+    const box = document.getElementById('notifPopupBox');
+    const icon = document.getElementById('notifPopupIcon');
+    const title = document.getElementById('notifPopupTitle');
+    const msg = document.getElementById('notifPopupMsg');
+    if (!wrap) return;
+    icon.textContent = icons[n.type] || '📢';
+    title.textContent = n.title;
+    msg.textContent = n.message;
+    box.style.borderColor = colors[n.type] || 'rgba(0,245,255,0.2)';
+    wrap.classList.remove('hidden');
+    setTimeout(() => { box.style.transform='translateY(0)'; box.style.opacity='1'; }, 50);
+    setTimeout(() => closeNotifPopup(), 5000);
+  }
+
+  window.closeNotifPopup = function() {
+    const wrap = document.getElementById('notifPopupWrap');
+    const box = document.getElementById('notifPopupBox');
+    box.style.transform = 'translateY(100px)';
+    box.style.opacity = '0';
+    setTimeout(() => { wrap.classList.add('hidden'); showing=false; showNext(); }, 400);
+  };
+
+  // Load thông báo từ server
+  fetch('http://127.0.0.1:3000/api/features/active-notifications')
+    .then(r => r.json())
+    .then(data => {
+      const shown = JSON.parse(sessionStorage.getItem('shownNotifs')||'[]');
+      const news = (data.notifications||[]).filter(n => n.isActive && !shown.includes(n._id));
+      if (!news.length) return;
+      sessionStorage.setItem('shownNotifs', JSON.stringify([...shown, ...news.map(n=>n._id)]));
+      queue = news;
+      setTimeout(showNext, 2000);
+    })
+    .catch(()=>{});
+})();
+
+// ══ RANK BADGE ══
+(function() {
+  const daysLeft = <?= (int)$session_days_left ?>;
+  const totalUsed = 30 - Math.max(0, daysLeft);
+  let rank, color, icon;
+  if (totalUsed >= 90) { rank='LEGEND'; color='#fbbf24'; icon='👑'; }
+  else if (totalUsed >= 30) { rank='ELITE'; color='#c084fc'; icon='💎'; }
+  else if (totalUsed >= 7) { rank='PRO'; color='#00f5ff'; icon='⚡'; }
+  else { rank='ROOKIE'; color='#34d399'; icon='🌱'; }
+
+  const el = document.getElementById('userRankBadge');
+  if (el) {
+    el.textContent = icon + ' ' + rank;
+    el.style.color = color;
+    el.style.borderColor = color.replace(')', ',0.3)').replace('rgb','rgba');
+  }
+})();
+</script>
+<script>
+(function(){
+  var nCfg = {
+    info:   {icon:'ℹ️',color:'#67e8f9',cls:'nn-info'},
+    success:{icon:'✅',color:'#6ee7b7',cls:'nn-success'},
+    warning:{icon:'⚠️',color:'#fde68a',cls:'nn-warning'},
+    danger: {icon:'🚨',color:'#fca5a5',cls:'nn-danger'}
+  };
+  function renderNeonNotifs(list){
+    var wrap=document.getElementById('notifNeonWrap');
+    var el=document.getElementById('notifNeonList');
+    if(!wrap||!el||!list.length)return;
+    el.innerHTML=list.map(function(n){
+      var c=nCfg[n.type]||nCfg.info;
+      return '<div class="'+c.cls+'" style="display:flex;align-items:flex-start;gap:10px">'+
+        '<span style="font-size:18px;flex-shrink:0">'+c.icon+'</span>'+
+        '<div style="flex:1;min-width:0">'+
+        '<div style="color:'+c.color+';font-size:12px;font-weight:800;margin-bottom:4px">'+n.title+'</div>'+
+        '<div style="color:#94a3b8;font-size:11px;line-height:1.6">'+n.message+'</div>'+
+        '</div>'+
+        '<button onclick="this.parentElement.parentElement.remove();var l=document.getElementById('notifNeonList');if(l&&!l.children.length)document.getElementById('notifNeonWrap').style.display='none'" '+
+        'style="background:none;border:none;cursor:pointer;color:#4b5563;font-size:18px;padding:0;flex-shrink:0;line-height:1">&times;</button>'+
+        '</div>';
+    }).join('');
+    wrap.style.display='block';
+  }
+  setTimeout(function(){
+    fetch('http://127.0.0.1:3000/api/features/active-notifications')
+      .then(function(r){return r.json();})
+      .then(function(d){if((d.notifications||[]).length)renderNeonNotifs(d.notifications);})
+      .catch(function(){});
+  },800);
 })();
 </script>
 </body>

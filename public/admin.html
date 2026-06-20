@@ -42,6 +42,143 @@ body { font-family: 'Space Grotesk', sans-serif !important; }
 .admin-split-col { border: 1px solid rgba(0,240,255,0.12); background: rgba(6,12,30,0.72); border-radius: 0.9rem; padding: 1rem; min-height: 320px; }
 .admin-split-col.cheathack-col { border-color: rgba(192,132,252,0.2); box-shadow: inset 0 0 28px rgba(192,132,252,0.04); }
 .admin-split-col.system-col { border-color: rgba(0,245,255,0.14); box-shadow: inset 0 0 28px rgba(0,245,255,0.04); }
+
+/* ── Nâng cấp toàn bộ UI ── */
+:root { --cyan: #00f5ff; --amber: #fbbf24; --emerald: #34d399; --red: #f43f5e; }
+
+/* Animated background grid */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,245,255,0.08), transparent),
+              radial-gradient(ellipse 60% 40% at 80% 80%, rgba(192,132,252,0.05), transparent);
+}
+
+/* Nav glow */
+nav { box-shadow: 0 1px 0 rgba(0,245,255,0.1), 0 4px 24px rgba(0,0,0,0.4); }
+
+/* Stats cards nâng cấp */
+.stat-card {
+  background: linear-gradient(135deg, rgba(14,20,42,0.9), rgba(8,12,28,0.95));
+  border: 1px solid rgba(0,245,255,0.12);
+  border-radius: 1rem; padding: 1.25rem;
+  box-shadow: 0 0 24px rgba(0,245,255,0.04), inset 0 1px 0 rgba(255,255,255,0.04);
+  transition: all 0.3s ease; position: relative; overflow: hidden;
+}
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,245,255,0.4), transparent);
+}
+.stat-card:hover { border-color: rgba(0,245,255,0.25); box-shadow: 0 0 32px rgba(0,245,255,0.08); transform: translateY(-1px); }
+.stat-card.amber { border-color: rgba(251,191,36,0.15); }
+.stat-card.amber::before { background: linear-gradient(90deg, transparent, rgba(251,191,36,0.4), transparent); }
+.stat-card.emerald { border-color: rgba(52,211,153,0.15); }
+.stat-card.emerald::before { background: linear-gradient(90deg, transparent, rgba(52,211,153,0.4), transparent); }
+.stat-card.red { border-color: rgba(244,63,94,0.15); }
+.stat-card.red::before { background: linear-gradient(90deg, transparent, rgba(244,63,94,0.4), transparent); }
+.stat-card.purple { border-color: rgba(192,132,252,0.15); }
+.stat-card.purple::before { background: linear-gradient(90deg, transparent, rgba(192,132,252,0.4), transparent); }
+
+/* Table nâng cấp */
+table tbody tr { transition: background 0.15s ease; }
+table thead th { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* Copy button */
+.copy-key-btn { 
+  opacity: 0; transition: opacity 0.2s;
+  background: rgba(0,245,255,0.1); border: 1px solid rgba(0,245,255,0.3);
+  color: #00f5ff; padding: 2px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;
+}
+tr:hover .copy-key-btn { opacity: 1; }
+.copy-key-btn.copied { background: rgba(52,211,153,0.15); border-color: rgba(52,211,153,0.4); color: #34d399; }
+
+/* Progress bar thời hạn */
+.expiry-bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.08); margin-top: 4px; overflow: hidden; }
+.expiry-bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+
+/* Action buttons nâng cấp */
+.action-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+  border: 1px solid; transition: all 0.2s ease; cursor: pointer; white-space: nowrap;
+}
+.action-btn:hover { transform: translateY(-1px); }
+.action-btn.extend1 { border-color: rgba(52,211,153,0.5); color: #6ee7b7; background: rgba(52,211,153,0.05); }
+.action-btn.extend1:hover { background: rgba(52,211,153,0.15); box-shadow: 0 0 12px rgba(52,211,153,0.3); }
+.action-btn.extend30 { border-color: rgba(34,211,238,0.5); color: #67e8f9; background: rgba(34,211,238,0.05); }
+.action-btn.extend30:hover { background: rgba(34,211,238,0.15); box-shadow: 0 0 12px rgba(34,211,238,0.3); }
+.action-btn.kick { border-color: rgba(251,146,60,0.5); color: #fb923c; background: rgba(251,146,60,0.05); }
+.action-btn.kick:hover { background: rgba(251,146,60,0.15); box-shadow: 0 0 12px rgba(251,146,60,0.3); }
+.action-btn.toggle { border-color: rgba(251,191,36,0.5); color: #fbbf24; background: rgba(251,191,36,0.05); }
+.action-btn.toggle:hover { background: rgba(251,191,36,0.15); }
+.action-btn.reset { border-color: rgba(96,165,250,0.5); color: #60a5fa; background: rgba(96,165,250,0.05); }
+.action-btn.reset:hover { background: rgba(96,165,250,0.15); }
+.action-btn.del { border-color: rgba(244,63,94,0.5); color: #fb7185; background: rgba(244,63,94,0.05); }
+.action-btn.del:hover { background: rgba(244,63,94,0.15); box-shadow: 0 0 12px rgba(244,63,94,0.3); }
+
+/* Badge nâng cấp */
+.badge-vip-new { 
+  background: linear-gradient(135deg, rgba(251,191,36,0.2), rgba(245,158,11,0.1));
+  border: 1px solid rgba(251,191,36,0.5); color: #fbbf24;
+  padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 700;
+  box-shadow: 0 0 8px rgba(251,191,36,0.2); letter-spacing: 0.05em;
+}
+.badge-free-new {
+  background: linear-gradient(135deg, rgba(52,211,153,0.15), rgba(16,185,129,0.08));
+  border: 1px solid rgba(52,211,153,0.4); color: #34d399;
+  padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+}
+.badge-pro-new {
+  background: linear-gradient(135deg, rgba(192,132,252,0.2), rgba(168,85,247,0.1));
+  border: 1px solid rgba(192,132,252,0.5); color: #c084fc;
+  padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+}
+.badge-active { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.4); color: #34d399; padding: 2px 8px; border-radius: 999px; font-size: 11px; }
+.badge-banned { background: rgba(244,63,94,0.1); border: 1px solid rgba(244,63,94,0.4); color: #fb7185; padding: 2px 8px; border-radius: 999px; font-size: 11px; }
+
+/* Online indicator */
+.online-dot { width: 6px; height: 6px; border-radius: 50%; background: #34d399; display: inline-block; margin-right: 4px; box-shadow: 0 0 6px #34d399; animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
+
+/* Search + filter bar */
+.search-input {
+  background: rgba(9,11,20,0.8); border: 1px solid rgba(0,245,255,0.15);
+  color: #e4e4e7; border-radius: 10px; padding: 8px 16px; font-size: 13px;
+  transition: all 0.2s; outline: none;
+}
+.search-input:focus { border-color: rgba(0,245,255,0.4); box-shadow: 0 0 0 3px rgba(0,245,255,0.06); }
+.filter-pill { padding: 4px 14px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 1px solid; transition: all 0.2s; cursor: pointer; }
+.filter-pill.active { background: rgba(0,245,255,0.12); color: #00f5ff; border-color: rgba(0,245,255,0.4); }
+.filter-pill:not(.active) { color: #71717a; border-color: rgba(255,255,255,0.08); }
+.filter-pill:not(.active):hover { color: #a1a1aa; border-color: rgba(255,255,255,0.15); }
+
+/* Tab buttons nâng cấp */
+.tab-btn { transition: all 0.2s ease; }
+.tab-btn.active-tab { 
+  background: linear-gradient(135deg, rgba(0,245,255,0.15), rgba(0,200,255,0.08));
+  color: #00f5ff; border-color: rgba(0,245,255,0.4);
+  box-shadow: 0 0 12px rgba(0,245,255,0.1);
+}
+
+/* Toast notification */
+.admin-toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  background: linear-gradient(135deg, rgba(14,20,42,0.98), rgba(8,12,28,0.99));
+  border: 1px solid rgba(0,245,255,0.3); border-radius: 12px;
+  padding: 12px 20px; font-size: 13px; color: #e4e4e7;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 16px rgba(0,245,255,0.1);
+  transform: translateY(100px); opacity: 0;
+  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  display: flex; align-items: center; gap: 10px; max-width: 360px;
+}
+.admin-toast.show { transform: translateY(0); opacity: 1; }
+.admin-toast.success { border-color: rgba(52,211,153,0.4); }
+.admin-toast.error { border-color: rgba(244,63,94,0.4); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,245,255,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,245,255,0.35); }
   </style>
 </head>
 <body class="min-h-screen bg-[#050810] text-zinc-100 antialiased" style="background-image:linear-gradient(rgba(0,245,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,0.03) 1px,transparent 1px);background-size:48px 48px">
@@ -70,10 +207,13 @@ body { font-family: 'Space Grotesk', sans-serif !important; }
           <p class="text-xs text-zinc-500 mt-0.5">Tích hợp activate.php local</p>
           <p id="dbStatusBadge" class="text-xs mt-1 text-zinc-500">Database: đang kiểm tra...</p>
         </div>
-        <div class="flex gap-2">
-          <button data-tab="keys" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium bg-cyan-600/20 text-cyan-300 border border-cyan-500/40">Quản lý Key</button>
-          <button data-tab="config" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:bg-zinc-800 border border-transparent">Cấu hình</button>
-          <button data-tab="logs" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:bg-zinc-800 border border-transparent">Lịch sử</button>
+        <div class="flex gap-1.5 flex-wrap">
+          <button data-tab="keys" class="tab-btn active-tab px-4 py-2 rounded-lg text-sm font-medium border">🗝️ Key</button>
+          <button data-tab="config" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-transparent text-zinc-400 hover:bg-zinc-800">⚙️ Cấu hình</button>
+          <button data-tab="logs" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-transparent text-zinc-400 hover:bg-zinc-800">📋 Lịch sử</button>
+          <button data-tab="makefile" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-transparent text-zinc-400 hover:bg-zinc-800">🪄 Make File</button>
+          <button data-tab="notifications" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-transparent text-zinc-400 hover:bg-zinc-800">📢 Thông báo</button>
+          <button data-tab="analytics" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-transparent text-zinc-400 hover:bg-zinc-800">📊 Analytics</button>
         </div>
         <button id="logoutBtn" class="text-sm text-zinc-500 hover:text-red-400">Đăng xuất</button>
       </div>
@@ -82,29 +222,52 @@ body { font-family: 'Space Grotesk', sans-serif !important; }
     <main class="max-w-7xl mx-auto px-4 py-8">
       <section id="panel-keys" class="tab-panel">
         
-        <!-- Dashboard Thống Kê & Doanh Thu -->
-        <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 flex flex-col justify-between">
-            <h3 class="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">Tổng số Key hệ thống</h3>
-            <div class="text-3xl font-bold text-cyan-400 font-mono" id="statTotalKeys">0</div>
-          </div>
-          <div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 flex flex-col justify-between">
-            <h3 class="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">Key VIP Đang Hoạt Động</h3>
-            <div class="text-3xl font-bold text-amber-400 font-mono" id="statVipKeys">0</div>
-          </div>
-          <div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 flex flex-col h-[180px] sm:h-[140px] md:h-[135px] xl:h-[150px] relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-900/90 pointer-events-none z-10 top-2/3"></div>
-            <h3 class="text-[11px] font-semibold text-emerald-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-              NHẬT KÝ TRUY CẬP (LIVE_IP)
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-            </h3>
-            <div id="liveIpLogContainer" class="flex-1 overflow-y-auto space-y-2 pr-1 font-mono text-[10px] text-zinc-400 pb-8 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
-              <!-- JS Logs go here -->
+        <!-- Dashboard Thống Kê nâng cấp -->
+        <div class="mb-6 grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="stat-card">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Tổng Key</span>
+              <span class="text-2xl opacity-30">🗝️</span>
             </div>
+            <div class="text-3xl font-bold text-cyan-400 font-mono" id="statTotalKeys">0</div>
+            <div class="text-[10px] text-zinc-600 mt-1">Toàn bộ hệ thống</div>
           </div>
+          <div class="stat-card amber">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Key VIP Active</span>
+              <span class="text-2xl opacity-30">👑</span>
+            </div>
+            <div class="text-3xl font-bold text-amber-400 font-mono" id="statVipKeys">0</div>
+            <div class="text-[10px] text-zinc-600 mt-1">Đang hoạt động</div>
+          </div>
+          <div class="stat-card emerald">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Key FREE</span>
+              <span class="text-2xl opacity-30">🎫</span>
+            </div>
+            <div class="text-3xl font-bold text-emerald-400 font-mono" id="statFreeKeys">0</div>
+            <div class="text-[10px] text-zinc-600 mt-1">Tài khoản miễn phí</div>
+          </div>
+          <div class="stat-card red">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Hết hạn</span>
+              <span class="text-2xl opacity-30">⏰</span>
+            </div>
+            <div class="text-3xl font-bold text-red-400 font-mono" id="statExpiredKeys">0</div>
+            <div class="text-[10px] text-zinc-600 mt-1">Cần gia hạn</div>
+          </div>
+        </div>
+
+        <!-- Live IP Log -->
+        <div class="mb-6 stat-card" style="padding:1rem">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-[11px] font-bold text-emerald-400 uppercase tracking-widest">NHẬT KÝ TRUY CẬP LIVE</span>
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+          </div>
+          <div id="liveIpLogContainer" class="overflow-y-auto font-mono text-[10px] text-zinc-400 space-y-1.5" style="max-height:80px"></div>
         </div>
 
         <!-- Form tạo Key nâng cấp -->
@@ -147,16 +310,19 @@ body { font-family: 'Space Grotesk', sans-serif !important; }
           <p id="generateMsg" class="mt-2 text-sm hidden"></p>
         </div>
 
-        <!-- Bộ lọc & Danh sách Key -->
-        <div class="mb-4 flex flex-wrap gap-4 items-center justify-between">
-          <div class="flex-1 min-w-[200px]">
-            <input type="text" id="searchKeyInput" placeholder="Tìm kiếm Key, IP, Ghi chú..." class="w-full rounded-lg border border-zinc-700 bg-zinc-900/80 px-4 py-2 text-sm focus:border-cyan-500 focus:outline-none">
+        <!-- Bộ lọc & Tìm kiếm nâng cấp -->
+        <div class="mb-4 flex flex-wrap gap-3 items-center">
+          <div class="flex-1 min-w-[220px] relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"></i>
+            <input type="text" id="searchKeyInput" placeholder="Tìm Key, IP, ghi chú..." class="search-input w-full pl-9">
           </div>
-          <div class="flex gap-2">
-            <button data-filter="all" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-600/20 text-cyan-300 border border-cyan-500/40">Tất cả</button>
-            <button data-filter="vip" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:bg-zinc-800 border border-transparent">VIP</button>
-            <button data-filter="expired" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:bg-zinc-800 border border-transparent">Hết hạn</button>
-            <button data-filter="inactive" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:bg-zinc-800 border border-transparent">Chưa KH</button>
+          <div class="flex gap-2 flex-wrap">
+            <button data-filter="all" class="filter-pill active">Tất cả</button>
+            <button data-filter="vip" class="filter-pill">👑 VIP</button>
+            <button data-filter="free" class="filter-pill">🎫 FREE</button>
+            <button data-filter="online" class="filter-pill">🟢 Online</button>
+            <button data-filter="expired" class="filter-pill">⏰ Hết hạn</button>
+            <button data-filter="inactive" class="filter-pill">⚪ Chưa KH</button>
           </div>
         </div>
 
@@ -183,15 +349,7 @@ body { font-family: 'Space Grotesk', sans-serif !important; }
       <section id="panel-config" class="tab-panel hidden max-w-[96rem] w-full">
         <h2 class="text-lg font-semibold mb-4 text-cyan-400">Cấu hình hệ thống</h2>
 
-        <div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 mb-6">
-          <h3 class="text-sm font-semibold text-zinc-300 mb-3">Link tải phần mềm (legacy)</h3>
-          <label class="block text-xs text-zinc-500 mb-1">Tiêu đề</label>
-          <input id="downloadTitle" class="w-full mb-3 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm" />
-          <label class="block text-xs text-zinc-500 mb-1">Link tải</label>
-          <input id="downloadLink" class="w-full mb-3 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm" />
-          <button id="saveConfigBtn" class="rounded-lg bg-cyan-600 hover:bg-cyan-500 px-5 py-2 text-sm font-semibold">Lưu cấu hình</button>
-          <p id="configMsg" class="mt-2 text-sm text-emerald-400 hidden"></p>
-        </div>
+
 
         <p id="sfMsg" class="mb-3 text-sm hidden"></p>
 
@@ -245,20 +403,197 @@ body { font-family: 'Space Grotesk', sans-serif !important; }
       </section>
 
       <section id="panel-logs" class="tab-panel hidden">
-        <div class="overflow-x-auto rounded-xl border border-zinc-800">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-bold text-zinc-200">📋 Lịch sử truy cập</h2>
+          <button onclick="loadLogs()" class="action-btn reset text-xs"><i class="fa-solid fa-rotate"></i> Làm mới</button>
+        </div>
+        <div class="overflow-x-auto rounded-xl border border-zinc-800" style="background:rgba(9,11,20,0.6)">
           <table class="w-full text-sm">
-            <thead class="bg-zinc-900 text-zinc-400 text-left">
+            <thead style="background:rgba(9,11,20,0.9)" class="text-zinc-500 text-left">
               <tr>
-                <th class="p-3">Thời gian</th>
-                <th class="p-3">Key</th>
-                <th class="p-3">IP</th>
-                <th class="p-3">Kết quả</th>
+                <th class="p-3 text-[11px] uppercase tracking-wider">Thời gian</th>
+                <th class="p-3 text-[11px] uppercase tracking-wider">Key</th>
+                <th class="p-3 text-[11px] uppercase tracking-wider">IP</th>
+                <th class="p-3 text-[11px] uppercase tracking-wider">Kết quả</th>
               </tr>
             </thead>
-            <tbody id="logsTableBody" class="divide-y divide-zinc-800"></tbody>
+            <tbody id="logsTableBody" class="divide-y divide-zinc-800/50"></tbody>
           </table>
         </div>
       </section>
+      <!-- TAB MAKE FILE TEMPLATES nâng cấp -->
+      <section id="panel-makefile" class="tab-panel hidden max-w-5xl w-full">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2">🪄 Make File Templates</h2>
+            <p class="text-xs text-zinc-500 mt-1">Admin upload file theo từng thiết bị — user chọn máy nhận đúng file</p>
+          </div>
+          <button id="btnOpenAddTemplate" class="px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-all"
+            style="background:linear-gradient(135deg,rgba(251,191,36,0.9),rgba(245,158,11,0.8));color:#000;box-shadow:0 0 20px rgba(251,191,36,0.25)">
+            <i class="fa-solid fa-plus"></i> Thêm Template
+          </button>
+        </div>
+        <p id="mfMsg" class="mb-3 text-sm hidden"></p>
+        <!-- Stats mini -->
+        <div class="grid grid-cols-3 gap-3 mb-5">
+          <div class="stat-card amber text-center py-3">
+            <div class="text-2xl font-bold text-amber-400 font-mono" id="mfStatTotal">0</div>
+            <div class="text-[10px] text-zinc-500 mt-1">Tổng Template</div>
+          </div>
+          <div class="stat-card" style="border-color:rgba(59,130,246,0.2)" class="text-center py-3">
+            <div class="text-2xl font-bold text-blue-400 font-mono" id="mfStatIos">0</div>
+            <div class="text-[10px] text-zinc-500 mt-1">🍎 iOS</div>
+          </div>
+          <div class="stat-card emerald text-center py-3">
+            <div class="text-2xl font-bold text-emerald-400 font-mono" id="mfStatAndroid">0</div>
+            <div class="text-[10px] text-zinc-500 mt-1">🤖 Android</div>
+          </div>
+        </div>
+        <div class="rounded-xl border border-zinc-800 overflow-hidden" style="background:rgba(9,11,20,0.6)">
+          <table class="w-full text-sm">
+            <thead style="background:rgba(9,11,20,0.9)" class="text-zinc-500 text-left">
+              <tr>
+                <th class="p-3 text-[11px] uppercase tracking-wider">Thiết bị</th>
+                <th class="p-3 text-[11px] uppercase tracking-wider">Loại</th>
+                <th class="p-3 text-[11px] uppercase tracking-wider">Link tải</th>
+                <th class="p-3 text-[11px] uppercase tracking-wider">Trạng thái</th>
+                <th class="p-3 text-[11px] uppercase tracking-wider">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="mfTableBody" class="divide-y divide-zinc-800/50">
+              <tr><td colspan="5" class="p-8 text-center text-zinc-600 text-xs">Đang tải...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
+
+      <!-- TAB THÔNG BÁO -->
+      <section id="panel-notifications" class="tab-panel hidden max-w-3xl w-full">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h2 class="text-lg font-bold text-cyan-400">📢 Quản lý Thông Báo</h2>
+            <p class="text-xs text-zinc-500 mt-1">Tạo thông báo hiện trên web activate cho tất cả user</p>
+          </div>
+          <button id="btnAddNotif" class="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 text-black"
+            style="background:linear-gradient(135deg,#00f5ff,#7c3aed);box-shadow:0 0 16px rgba(0,245,255,0.2)">
+            <i class="fa-solid fa-plus"></i> Thêm thông báo
+          </button>
+        </div>
+
+        <!-- Form thêm/sửa -->
+        <div id="notifForm" class="stat-card mb-5 hidden">
+          <h3 id="notifFormTitle" class="text-sm font-bold text-cyan-400 mb-4">Thêm Thông Báo Mới</h3>
+          <div class="space-y-3">
+            <input id="notifTitle" type="text" placeholder="Tiêu đề thông báo..."
+              class="search-input w-full text-sm"/>
+            <textarea id="notifMessage" rows="3" placeholder="Nội dung thông báo..."
+              class="search-input w-full text-sm resize-none" style="height:80px;resize:none"></textarea>
+            <div class="flex gap-3 flex-wrap">
+              <select id="notifType" class="search-input text-sm">
+                <option value="info">🔵 Info</option>
+                <option value="success">🟢 Success</option>
+                <option value="warning">🟡 Warning</option>
+                <option value="danger">🔴 Danger</option>
+              </select>
+              <label class="flex items-center gap-2 text-sm text-zinc-300">
+                <input type="checkbox" id="notifActive" checked class="accent-cyan-400"> Kích hoạt ngay
+              </label>
+            </div>
+            <div class="flex gap-2 justify-end">
+              <button onclick="document.getElementById('notifForm').classList.add('hidden')"
+                class="action-btn del text-xs px-4 py-2">Hủy</button>
+              <button id="notifSaveBtn" class="action-btn extend30 text-xs px-4 py-2">
+                <i class="fa-solid fa-save mr-1"></i>Lưu
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danh sách thông báo -->
+        <div class="rounded-xl border border-zinc-800 overflow-hidden" style="background:rgba(9,11,20,0.6)">
+          <table class="w-full text-sm">
+            <thead style="background:rgba(9,11,20,0.9)" class="text-zinc-500 text-left">
+              <tr>
+                <th class="p-3 text-[11px] uppercase tracking-wider">Tiêu đề</th>
+                <th class="p-3 text-[11px] uppercase tracking-wider">Loại</th>
+                <th class="p-3 text-[11px] uppercase tracking-wider">Trạng thái</th>
+                <th class="p-3 text-[11px] uppercase tracking-wider">Ngày tạo</th>
+                <th class="p-3 text-[11px] uppercase tracking-wider">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="notifTableBody" class="divide-y divide-zinc-800/50">
+              <tr><td colspan="5" class="p-6 text-center text-zinc-600 text-xs">Đang tải...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB ANALYTICS -->
+      <section id="panel-analytics" class="tab-panel hidden max-w-4xl w-full">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h2 class="text-lg font-bold text-cyan-400">📊 Analytics Dashboard</h2>
+            <p class="text-xs text-zinc-500 mt-1">Thống kê hệ thống realtime</p>
+          </div>
+          <button onclick="loadAnalytics()" class="action-btn reset text-xs px-3 py-2">
+            <i class="fa-solid fa-rotate mr-1"></i>Làm mới
+          </button>
+        </div>
+
+        <!-- Stats tổng quan -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5" id="analyticsStats">
+          <div class="stat-card text-center py-4"><div class="text-2xl font-bold text-cyan-400 font-mono" id="aStatTotal">—</div><div class="text-[10px] text-zinc-500 mt-1">Tổng Key</div></div>
+          <div class="stat-card amber text-center py-4"><div class="text-2xl font-bold text-amber-400 font-mono" id="aStatVip">—</div><div class="text-[10px] text-zinc-500 mt-1">Key VIP Active</div></div>
+          <div class="stat-card emerald text-center py-4"><div class="text-2xl font-bold text-emerald-400 font-mono" id="aStatOnline">—</div><div class="text-[10px] text-zinc-500 mt-1">Online ngay giờ</div></div>
+          <div class="stat-card red text-center py-4"><div class="text-2xl font-bold text-red-400 font-mono" id="aStatExpired">—</div><div class="text-[10px] text-zinc-500 mt-1">Hết hạn</div></div>
+        </div>
+
+        <!-- Tỉ lệ loại key -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
+          <div class="stat-card">
+            <h3 class="text-sm font-bold text-zinc-300 mb-4">🏷️ Phân bố loại Key</h3>
+            <div id="keyTypeChart" class="space-y-3"></div>
+          </div>
+          <div class="stat-card">
+            <h3 class="text-sm font-bold text-zinc-300 mb-4">📈 Trạng thái Key</h3>
+            <div id="keyStatusChart" class="space-y-3"></div>
+          </div>
+        </div>
+
+        <!-- Top IP -->
+        <div class="stat-card mb-5">
+          <h3 class="text-sm font-bold text-zinc-300 mb-4">🌐 Top IP Truy Cập</h3>
+          <div id="topIpList" class="space-y-2"></div>
+        </div>
+
+        <!-- Lịch sử logs + nút xóa -->
+        <div class="stat-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold text-zinc-300">📋 Lịch Sử Hoạt Động</h3>
+            <button id="clearLogsBtn" class="action-btn del text-xs px-3 py-1.5">
+              <i class="fa-solid fa-trash mr-1"></i>Xóa lịch sử
+            </button>
+          </div>
+          <div class="rounded-xl border border-zinc-800 overflow-hidden" style="background:rgba(9,11,20,0.6)">
+            <table class="w-full text-sm">
+              <thead style="background:rgba(9,11,20,0.9)" class="text-zinc-500 text-left">
+                <tr>
+                  <th class="p-3 text-[11px] uppercase tracking-wider">Sự kiện</th>
+                  <th class="p-3 text-[11px] uppercase tracking-wider">IP</th>
+                  <th class="p-3 text-[11px] uppercase tracking-wider">Chi tiết</th>
+                  <th class="p-3 text-[11px] uppercase tracking-wider">Thời gian</th>
+                </tr>
+              </thead>
+              <tbody id="analyticsLogsBody" class="divide-y divide-zinc-800/50">
+                <tr><td colspan="4" class="p-6 text-center text-zinc-600 text-xs">Đang tải...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
 
@@ -501,12 +836,7 @@ body { font-family: 'Space Grotesk', sans-serif !important; }
     }
 
     function showSfToast(message, isError) {
-      const msgEl = document.getElementById('sfMsg');
-      if (!msgEl) return;
-      msgEl.textContent = message;
-      msgEl.className = isError ? 'mb-3 text-sm text-red-400' : 'mb-3 text-sm text-emerald-400';
-      msgEl.classList.remove('hidden');
-      setTimeout(() => msgEl.classList.add('hidden'), 2800);
+      showAdminToast(message, isError ? 'error' : 'success');
     }
 
     function renderSystemFileRows(files) {
@@ -606,47 +936,109 @@ body { font-family: 'Space Grotesk', sans-serif !important; }
       }
     }
 
-    async function loadKeys() {
-      const data = await api('/keys');
-      document.getElementById('keysTableBody').innerHTML = data.keys.map((k) => `
-        <tr class="hover:bg-zinc-900/50" data-key-id="${k._id}">
-          <td class="p-3">
-            <div class="font-mono text-cyan-300">${k.keyString}</div>
-            <label class="block text-[10px] text-zinc-500 mt-1.5 uppercase tracking-wide">Ghi chú Khách hàng</label>
+    // Toast notification
+    function showAdminToast(msg, type = 'success') {
+      let toast = document.getElementById('adminToastEl');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'adminToastEl';
+        toast.className = 'admin-toast';
+        document.body.appendChild(toast);
+      }
+      const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+      toast.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+      toast.className = `admin-toast ${type}`;
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+
+    function keyTypeBadge(type) {
+      if (type === 'FREE') return '<span class="badge-free-new">FREE</span>';
+      if (type === 'PRO') return '<span class="badge-pro-new">PRO</span>';
+      return '<span class="badge-vip-new">VIP</span>';
+    }
+
+    function statusBadge(status) {
+      if (status === 'active') return '<span class="badge-active">● Active</span>';
+      return '<span class="badge-banned">✕ Banned</span>';
+    }
+
+    function expiryBar(expiredAt) {
+      if (!expiredAt) return '';
+      const now = Date.now();
+      const exp = new Date(expiredAt).getTime();
+      if (exp < now) return '<div class="expiry-bar"><div class="expiry-bar-fill" style="width:100%;background:#f43f5e"></div></div>';
+      // Tính % còn lại (max 30 ngày)
+      const maxMs = 30 * 24 * 3600 * 1000;
+      const remainMs = exp - now;
+      const pct = Math.min(100, Math.round(remainMs / maxMs * 100));
+      const color = pct > 50 ? '#34d399' : pct > 20 ? '#fbbf24' : '#f43f5e';
+      return `<div class="expiry-bar"><div class="expiry-bar-fill" style="width:${pct}%;background:${color}"></div></div>`;
+    }
+
+    function renderKeyRow(k) {
+      const isExpired = k.expiredAt && new Date(k.expiredAt).getTime() < Date.now();
+      return `
+        <tr class="hover:bg-zinc-900/40 transition-colors ${isExpired ? 'opacity-60' : ''}" data-key-id="${k._id}">
+          <td class="p-3 min-w-[200px]">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-cyan-300 text-sm">${k.keyString}</span>
+              <button class="copy-key-btn" onclick="copyKey('${k.keyString}', this)" title="Copy key">
+                <i class="fa-regular fa-copy"></i>
+              </button>
+            </div>
             <input type="text" data-note-for="${k._id}" value="${escapeHtml(k.adminNote || '')}"
-              placeholder="VD: Zalo 077..., gói VIP tháng 5..."
-              class="mt-0.5 w-full max-w-[220px] rounded border border-zinc-700/80 bg-zinc-950/60 px-2 py-1 text-[11px] text-zinc-300 focus:border-amber-500/50 focus:outline-none" />
+              placeholder="Ghi chú khách hàng..."
+              class="mt-1.5 w-full max-w-[220px] rounded border border-zinc-700/60 bg-zinc-950/60 px-2 py-1 text-[11px] text-zinc-400 focus:border-amber-500/40 focus:outline-none" />
           </td>
           <td class="p-3">${keyTypeBadge(k.keyType || 'VIP')}</td>
-          <td class="p-3">${k.durationDays} ngày</td>
+          <td class="p-3 text-xs text-zinc-400">${k.durationDays}d</td>
           <td class="p-3">${statusBadge(k.status)}</td>
-          <td class="p-3 font-mono text-xs">${k.boundIP || '—'}</td>
-          <td class="p-3">${k.isLoggedIn ? '<span class="text-emerald-400"><i class="fa-solid fa-circle text-[8px]"></i> Online</span>' : '<span class="text-zinc-600">Offline</span>'}</td>
-          <td class="p-3">${k.isActivated ? '<span class="text-emerald-400">Đã KH</span>' : '<span class="text-zinc-500">Chưa</span>'}</td>
-          <td class="p-3 text-xs">
-            <span class="expiry-cell" data-expiry-for="${k._id}">${fmtVN(k.expiredAt)}</span>
+          <td class="p-3 font-mono text-xs text-zinc-400">${k.boundIP || '<span class="text-zinc-600">—</span>'}</td>
+          <td class="p-3">
+            ${k.isLoggedIn
+              ? '<span class="text-emerald-400 text-xs flex items-center gap-1"><span class="online-dot"></span>Online</span>'
+              : '<span class="text-zinc-600 text-xs">Offline</span>'}
           </td>
-          <td class="p-3 flex flex-wrap gap-1 items-center">
-            <button data-action="extend" data-id="${k._id}" data-days="1" title="Cộng 1 ngày"
-              class="btn-extend-1 px-2 py-1 text-xs rounded border transition"><i class="fa-solid fa-plus-circle"></i> +1 Ngày</button>
-            <button data-action="extend" data-id="${k._id}" data-days="30" title="Cộng 30 ngày"
-              class="btn-extend-30 px-2 py-1 text-xs rounded border transition"><i class="fa-solid fa-calendar-plus"></i> +30 Ngày</button>
-            <button data-action="kick" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-red-500/60 text-red-400 hover:bg-red-500/10"><i class="fa-solid fa-user-slash"></i> Kick</button>
-            <button data-action="toggle" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-amber-500/50 text-amber-400">Ban/Unban</button>
-            <button data-action="reset" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-blue-500/50 text-blue-400">Reset IP</button>
-            <button data-action="delete" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-red-500/50 text-red-400">Xóa</button>
+          <td class="p-3 text-xs">${k.isActivated ? '<span class="text-emerald-400">✓ Đã KH</span>' : '<span class="text-zinc-600">Chưa</span>'}</td>
+          <td class="p-3 text-xs min-w-[130px]">
+            <span class="expiry-cell ${isExpired ? 'text-red-400' : 'text-zinc-300'}" data-expiry-for="${k._id}">${fmtVN(k.expiredAt)}</span>
+            ${expiryBar(k.expiredAt)}
           </td>
-        </tr>
-      `).join('');
+          <td class="p-3 min-w-[200px]">
+            <div class="flex flex-wrap gap-1">
+              <button data-action="extend" data-id="${k._id}" data-days="1" class="action-btn extend1"><i class="fa-solid fa-plus"></i>+1</button>
+              <button data-action="extend" data-id="${k._id}" data-days="30" class="action-btn extend30"><i class="fa-solid fa-calendar-plus"></i>+30</button>
+              <button data-action="kick" data-id="${k._id}" class="action-btn kick"><i class="fa-solid fa-user-slash"></i>Kick</button>
+              <button data-action="toggle" data-id="${k._id}" class="action-btn toggle">Ban</button>
+              <button data-action="reset" data-id="${k._id}" class="action-btn reset"><i class="fa-solid fa-rotate"></i>IP</button>
+              <button data-action="delete" data-id="${k._id}" class="action-btn del"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>`;
+    }
 
-      // Update Dashboard Stats
+    window.copyKey = function(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+        showAdminToast('Đã copy key!', 'success');
+        setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '<i class="fa-regular fa-copy"></i>'; }, 1800);
+      });
+    };
+
+    async function loadKeys() {
+      const data = await api('/keys');
+      const now = Date.now();
       const total = data.keys.length;
-      const vipActive = data.keys.filter(k => k.keyType === 'VIP' && k.status === 'active' && (!k.expiredAt || new Date(k.expiredAt).getTime() > Date.now())).length;
+      const vipActive = data.keys.filter(k => k.keyType === 'VIP' && k.status === 'active' && (!k.expiredAt || new Date(k.expiredAt).getTime() > now)).length;
+      const freeKeys = data.keys.filter(k => k.keyType === 'FREE').length;
+      const expired = data.keys.filter(k => k.expiredAt && new Date(k.expiredAt).getTime() < now).length;
       document.getElementById('statTotalKeys').textContent = total;
       document.getElementById('statVipKeys').textContent = vipActive;
-
-      // Filter Logic
-      allKeysData = data.keys; 
+      document.getElementById('statFreeKeys').textContent = freeKeys;
+      document.getElementById('statExpiredKeys').textContent = expired;
+      allKeysData = data.keys;
       applyFilterAndSearch();
     }
 
@@ -656,61 +1048,27 @@ body { font-family: 'Space Grotesk', sans-serif !important; }
     function applyFilterAndSearch() {
       const search = document.getElementById('searchKeyInput')?.value.toLowerCase() || '';
       const now = Date.now();
-      
       const filtered = allKeysData.filter(k => {
-        // Search
         const searchStr = `${k.keyString} ${k.boundIP || ''} ${k.adminNote || ''}`.toLowerCase();
         if (search && !searchStr.includes(search)) return false;
-
-        // Filter
         if (currentFilter === 'vip') return k.keyType === 'VIP';
+        if (currentFilter === 'free') return k.keyType === 'FREE';
+        if (currentFilter === 'online') return k.isLoggedIn;
         if (currentFilter === 'expired') return k.expiredAt && new Date(k.expiredAt).getTime() < now;
         if (currentFilter === 'inactive') return !k.isActivated;
         return true;
       });
-
-      // Update UI mapping logic already written above, so we extract row generation:
-      const rows = filtered.map((k) => `
-        <tr class="hover:bg-zinc-900/50" data-key-id="${k._id}">
-          <td class="p-3">
-            <div class="font-mono text-cyan-300">${k.keyString}</div>
-            <label class="block text-[10px] text-zinc-500 mt-1.5 uppercase tracking-wide">Ghi chú Khách hàng</label>
-            <input type="text" data-note-for="${k._id}" value="${escapeHtml(k.adminNote || '')}"
-              placeholder="VD: Zalo 077..., gói VIP tháng 5..."
-              class="mt-0.5 w-full max-w-[220px] rounded border border-zinc-700/80 bg-zinc-950/60 px-2 py-1 text-[11px] text-zinc-300 focus:border-amber-500/50 focus:outline-none" />
-          </td>
-          <td class="p-3">${keyTypeBadge(k.keyType || 'VIP')}</td>
-          <td class="p-3">${k.durationDays} ngày</td>
-          <td class="p-3">${statusBadge(k.status)}</td>
-          <td class="p-3 font-mono text-xs">${k.boundIP || '—'}</td>
-          <td class="p-3">${k.isLoggedIn ? '<span class="text-emerald-400"><i class="fa-solid fa-circle text-[8px]"></i> Online</span>' : '<span class="text-zinc-600">Offline</span>'}</td>
-          <td class="p-3">${k.isActivated ? '<span class="text-emerald-400">Đã KH</span>' : '<span class="text-zinc-500">Chưa</span>'}</td>
-          <td class="p-3 text-xs">
-            <span class="expiry-cell" data-expiry-for="${k._id}">${fmtVN(k.expiredAt)}</span>
-          </td>
-          <td class="p-3 flex flex-wrap gap-1 items-center">
-            <button data-action="extend" data-id="${k._id}" data-days="1" title="Cộng 1 ngày"
-              class="btn-extend-1 px-2 py-1 text-xs rounded border transition"><i class="fa-solid fa-plus-circle"></i> +1 Ngày</button>
-            <button data-action="extend" data-id="${k._id}" data-days="30" title="Cộng 30 ngày"
-              class="btn-extend-30 px-2 py-1 text-xs rounded border transition"><i class="fa-solid fa-calendar-plus"></i> +30 Ngày</button>
-            <button data-action="kick" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-red-500/60 text-red-400 hover:bg-red-500/10"><i class="fa-solid fa-user-slash"></i> Kick</button>
-            <button data-action="toggle" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-amber-500/50 text-amber-400">Ban/Unban</button>
-            <button data-action="reset" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-blue-500/50 text-blue-400">Reset IP</button>
-            <button data-action="delete" data-id="${k._id}" class="px-2 py-1 text-xs rounded border border-red-500/50 text-red-400">Xóa</button>
-          </td>
-        </tr>
-      `).join('');
-      document.getElementById('keysTableBody').innerHTML = rows || `<tr><td colspan="9" class="p-4 text-center text-zinc-500">Không có dữ liệu phù hợp</td></tr>`;
+      document.getElementById('keysTableBody').innerHTML = filtered.length
+        ? filtered.map(renderKeyRow).join('')
+        : '<tr><td colspan="9" class="p-6 text-center text-zinc-600 text-sm">Không có dữ liệu phù hợp</td></tr>';
     }
 
     document.getElementById('searchKeyInput')?.addEventListener('input', applyFilterAndSearch);
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.filter-btn').forEach(b => {
-          b.className = 'filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:bg-zinc-800 border border-transparent';
-        });
-        e.target.className = 'filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-600/20 text-cyan-300 border border-cyan-500/40';
-        currentFilter = e.target.dataset.filter;
+    document.querySelectorAll('.filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
         applyFilterAndSearch();
       });
     });
@@ -899,19 +1257,16 @@ body { font-family: 'Space Grotesk', sans-serif !important; }
       btn.addEventListener('click', () => {
         const tab = btn.dataset.tab;
         document.querySelectorAll('.tab-btn').forEach((b) => {
-          b.classList.remove('bg-cyan-600/20', 'text-cyan-300', 'border-cyan-500/40');
+          b.classList.remove('active-tab');
           b.classList.add('text-zinc-400', 'border-transparent');
+          b.classList.remove('border-cyan-500/40');
         });
-        btn.classList.add('bg-cyan-600/20', 'text-cyan-300', 'border-cyan-500/40');
+        btn.classList.add('active-tab');
         btn.classList.remove('text-zinc-400', 'border-transparent');
         document.querySelectorAll('.tab-panel').forEach((p) => p.classList.add('hidden'));
         document.getElementById('panel-' + tab).classList.remove('hidden');
         if (tab === 'logs') loadLogs();
-        if (tab === 'config') {
-          loadConfig();
-          loadSystemFiles();
-          loadCheathackFiles();
-        }
+        if (tab === 'config') { loadConfig(); loadSystemFiles(); loadCheathackFiles(); }
       });
     });
 
@@ -1113,6 +1468,424 @@ body { font-family: 'Space Grotesk', sans-serif !important; }
     scheduleNextIpLog();
 
     checkSession();
+  </script>
+
+  <!-- MODAL MAKE FILE TEMPLATE -->
+  <div id="mfModal" class="fixed inset-0 z-[90] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="bg-zinc-900 border border-zinc-700 rounded-2xl p-7 w-full max-w-lg relative">
+      <button id="mfModalClose" class="absolute top-4 right-4 text-zinc-500 hover:text-zinc-200 text-xl"><i class="fa-solid fa-xmark"></i></button>
+      <h3 id="mfModalTitle" class="text-base font-bold text-amber-400 mb-5">Thêm Template Mới</h3>
+      <div class="space-y-4">
+        <div>
+          <label class="text-xs text-zinc-400 mb-1 block">Tên Thiết Bị *</label>
+          <input id="mfDeviceName" type="text" placeholder="VD: iPhone 15 Pro Max, Samsung Galaxy S24..."
+            class="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none"/>
+        </div>
+        <div>
+          <label class="text-xs text-zinc-400 mb-1 block">Loại Thiết Bị *</label>
+          <select id="mfDeviceType" class="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none">
+            <option value="ios">iOS (iPhone)</option>
+            <option value="android">Android</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-zinc-400 mb-1 block">Link Tải File *</label>
+          <input id="mfDownloadLink" type="text" placeholder="https://drive.google.com/..."
+            class="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none"/>
+        </div>
+        <div class="flex items-center gap-3">
+          <input type="checkbox" id="mfIsActive" checked class="w-4 h-4 accent-amber-400"/>
+          <label for="mfIsActive" class="text-sm text-zinc-300">Kích hoạt (user có thể tải)</label>
+        </div>
+      </div>
+      <p id="mfModalMsg" class="mt-3 text-sm hidden"></p>
+      <div class="mt-6 flex gap-3 justify-end">
+        <button id="mfModalCancelBtn" class="px-4 py-2 rounded-lg border border-zinc-600 text-zinc-400 hover:bg-zinc-800 text-sm">Hủy</button>
+        <button id="mfModalSaveBtn" class="px-6 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    let mfEditId = null;
+
+    function mfShowMsg(text, ok) {
+      showAdminToast(text, ok ? 'success' : 'error');
+    }
+
+    async function loadTemplates() {
+      const tbody = document.getElementById('mfTableBody');
+      tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-zinc-600 text-xs">Đang tải...</td></tr>';
+      try {
+        const res = await fetch('/api/admin/makefile-templates', { credentials: 'include' });
+        const data = await res.json();
+        if (!data.success || !data.templates.length) {
+          tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-zinc-600 text-sm">Chưa có template — bấm <strong class="text-amber-400">Thêm Template</strong> để bắt đầu</td></tr>';
+          document.getElementById('mfStatTotal').textContent = '0';
+          document.getElementById('mfStatIos').textContent = '0';
+          document.getElementById('mfStatAndroid').textContent = '0';
+          return;
+        }
+        const tpls = data.templates;
+        document.getElementById('mfStatTotal').textContent = tpls.length;
+        document.getElementById('mfStatIos').textContent = tpls.filter(t=>t.deviceType==='ios').length;
+        document.getElementById('mfStatAndroid').textContent = tpls.filter(t=>t.deviceType==='android').length;
+        tbody.innerHTML = tpls.map(t => `
+          <tr class="hover:bg-zinc-800/30 transition-colors">
+            <td class="p-3">
+              <div class="font-mono text-cyan-300 text-sm font-semibold">${t.deviceName}</div>
+            </td>
+            <td class="p-3">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-bold ${t.deviceType==='ios'?'bg-blue-500/15 text-blue-300 border border-blue-500/30':'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'}">
+                ${t.deviceType==='ios'?'🍎 iOS':'🤖 Android'}
+              </span>
+            </td>
+            <td class="p-3 text-xs">
+              <a href="${t.downloadLink}" target="_blank" class="text-cyan-400 hover:text-cyan-200 underline truncate block max-w-[200px]" title="${t.downloadLink}">
+                ${t.downloadLink.replace(/^https?:\/\//, '').substring(0,40)}${t.downloadLink.length>50?'...':''}
+              </a>
+            </td>
+            <td class="p-3">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-bold ${t.isActive?'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30':'bg-red-500/15 text-red-400 border border-red-500/30'}">
+                ${t.isActive?'✅ Active':'🔴 Tắt'}
+              </span>
+            </td>
+            <td class="p-3">
+              <div class="flex gap-2">
+                <button onclick="mfEdit('${t._id}')" class="action-btn reset text-xs"><i class="fa-solid fa-pen"></i> Sửa</button>
+                <button onclick="mfDelete('${t._id}')" class="action-btn del text-xs"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      } catch(e) {
+        tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-red-400 text-xs">Lỗi tải danh sách</td></tr>';
+      }
+    }
+
+    function openModal(mode, data) {
+      mfEditId = data?._id || null;
+      document.getElementById('mfModalTitle').textContent = mode==='edit' ? 'Sửa Template' : 'Thêm Template Mới';
+      document.getElementById('mfDeviceName').value = data?.deviceName || '';
+      document.getElementById('mfDeviceType').value = data?.deviceType || 'ios';
+      document.getElementById('mfDownloadLink').value = data?.downloadLink || '';
+      document.getElementById('mfIsActive').checked = data?.isActive !== false;
+      document.getElementById('mfModalMsg').classList.add('hidden');
+      document.getElementById('mfModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('mfModal').classList.add('hidden');
+      mfEditId = null;
+    }
+
+    document.getElementById('btnOpenAddTemplate').addEventListener('click', () => openModal('add'));
+    document.getElementById('mfModalClose').addEventListener('click', closeModal);
+    document.getElementById('mfModalCancelBtn').addEventListener('click', closeModal);
+
+    document.getElementById('mfModalSaveBtn').addEventListener('click', async () => {
+      const deviceName = document.getElementById('mfDeviceName').value.trim();
+      const deviceType = document.getElementById('mfDeviceType').value;
+      const downloadLink = document.getElementById('mfDownloadLink').value.trim();
+      const isActive = document.getElementById('mfIsActive').checked;
+      if (!deviceName || !downloadLink) {
+        document.getElementById('mfModalMsg').textContent = 'Vui lòng điền đầy đủ thông tin!';
+        document.getElementById('mfModalMsg').className = 'mt-3 text-sm text-red-400';
+        document.getElementById('mfModalMsg').classList.remove('hidden');
+        return;
+      }
+      const btn = document.getElementById('mfModalSaveBtn');
+      btn.disabled = true; btn.textContent = 'Đang lưu...';
+      try {
+        const url = mfEditId ? `/api/admin/makefile-templates/${mfEditId}` : '/api/admin/makefile-templates';
+        const res = await fetch(url, {
+          method: mfEditId ? 'PUT' : 'POST',
+          credentials: 'include',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({deviceName, deviceType, downloadLink, isActive}),
+        });
+        const data = await res.json();
+        if (data.success) { closeModal(); mfShowMsg(data.message, true); loadTemplates(); }
+        else {
+          document.getElementById('mfModalMsg').textContent = data.message || 'Lỗi!';
+          document.getElementById('mfModalMsg').className = 'mt-3 text-sm text-red-400';
+          document.getElementById('mfModalMsg').classList.remove('hidden');
+        }
+      } catch(e) {
+        document.getElementById('mfModalMsg').textContent = 'Lỗi kết nối!';
+        document.getElementById('mfModalMsg').classList.remove('hidden');
+      } finally { btn.disabled=false; btn.textContent='Lưu'; }
+    });
+
+    window.mfEdit = async function(id) {
+      const res = await fetch('/api/admin/makefile-templates', {credentials:'include'});
+      const data = await res.json();
+      const t = (data.templates||[]).find(x=>x._id===id);
+      if (t) openModal('edit', t);
+    };
+
+    window.mfDelete = async function(id) {
+      if (!confirm('Xóa template này?')) return;
+      const res = await fetch(`/api/admin/makefile-templates/${id}`, {method:'DELETE',credentials:'include'});
+      const data = await res.json();
+      mfShowMsg(data.message, data.success);
+      if (data.success) loadTemplates();
+    };
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.tab === 'makefile') loadTemplates();
+      });
+    });
+  })();
+
+  // ══ MUSIC JS ══
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      if(btn.dataset.tab==='notifications') loadNotifications();
+      if(btn.dataset.tab==='analytics') loadAnalytics();
+    });
+  });
+
+  // ══ ANALYTICS JS ══
+  async function loadAnalytics() {
+    try {
+      const res = await fetch('/api/admin/keys', {credentials:'include'});
+      const data = await res.json();
+      const keys = data.keys || [];
+      const now = Date.now();
+
+      // Stats
+      const total = keys.length;
+      const vipActive = keys.filter(k => k.keyType==='VIP' && k.status==='active' && (!k.expiredAt || new Date(k.expiredAt).getTime()>now)).length;
+      const online = keys.filter(k => k.isLoggedIn).length;
+      const expired = keys.filter(k => k.expiredAt && new Date(k.expiredAt).getTime()<now).length;
+      document.getElementById('aStatTotal').textContent = total;
+      document.getElementById('aStatVip').textContent = vipActive;
+      document.getElementById('aStatOnline').textContent = online;
+      document.getElementById('aStatExpired').textContent = expired;
+
+      // Key type chart
+      const types = {VIP:0, FREE:0, PRO:0};
+      keys.forEach(k => { types[k.keyType||'VIP'] = (types[k.keyType||'VIP']||0)+1; });
+      const typeColors = {VIP:'#fbbf24', FREE:'#34d399', PRO:'#c084fc'};
+      document.getElementById('keyTypeChart').innerHTML = Object.entries(types)
+        .filter(([,v])=>v>0)
+        .sort((a,b)=>b[1]-a[1])
+        .map(([t,v]) => {
+          const pct = total ? Math.round(v/total*100) : 0;
+          return `<div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold" style="color:${typeColors[t]||'#fff'}">${t}</span>
+              <span class="text-zinc-400">${v} key (${pct}%)</span>
+            </div>
+            <div class="h-2 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.06)">
+              <div class="h-full rounded-full transition-all" style="width:${pct}%;background:${typeColors[t]||'#fff'}"></div>
+            </div>
+          </div>`;
+        }).join('');
+
+      // Status chart
+      const active = keys.filter(k=>k.status==='active' && (!k.expiredAt||new Date(k.expiredAt).getTime()>now)).length;
+      const banned = keys.filter(k=>k.status==='banned').length;
+      const inactive = keys.filter(k=>!k.isActivated).length;
+      const statusData = [
+        {label:'Active', val:active, color:'#34d399'},
+        {label:'Hết hạn', val:expired, color:'#f43f5e'},
+        {label:'Banned', val:banned, color:'#f97316'},
+        {label:'Chưa kích hoạt', val:inactive, color:'#6b7280'},
+      ].filter(s=>s.val>0);
+      document.getElementById('keyStatusChart').innerHTML = statusData
+        .map(s => {
+          const pct = total ? Math.round(s.val/total*100) : 0;
+          return `<div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold" style="color:${s.color}">${s.label}</span>
+              <span class="text-zinc-400">${s.val} (${pct}%)</span>
+            </div>
+            <div class="h-2 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.06)">
+              <div class="h-full rounded-full" style="width:${pct}%;background:${s.color}"></div>
+            </div>
+          </div>`;
+        }).join('');
+
+      // Top IP
+      const ipCount = {};
+      keys.forEach(k => { if(k.boundIP) ipCount[k.boundIP] = (ipCount[k.boundIP]||0)+1; });
+      const topIps = Object.entries(ipCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      document.getElementById('topIpList').innerHTML = topIps.length
+        ? topIps.map(([ip,cnt],i) => `
+          <div class="flex items-center gap-3 p-2.5 rounded-xl" style="background:rgba(0,245,255,0.04);border:1px solid rgba(0,245,255,0.08)">
+            <span class="text-xs font-bold text-zinc-600 w-5">#${i+1}</span>
+            <span class="font-mono text-sm text-cyan-300 flex-1">${ip}</span>
+            <span class="text-xs text-zinc-400">${cnt} key</span>
+          </div>`).join('')
+        : '<p class="text-xs text-zinc-600 text-center py-3">Chưa có dữ liệu</p>';
+
+    } catch(e) { showAdminToast('Lỗi tải analytics: '+e.message, 'error'); }
+
+    // Load logs
+    try {
+      const res2 = await fetch('/api/admin/admin-logs', {credentials:'include'});
+      const data2 = await res2.json();
+      const logs = data2.logs || [];
+      const evtMap = {
+        login_success: '<span class="text-emerald-400">✅ Đăng nhập thành công</span>',
+        login_fail: '<span class="text-red-400">❌ Đăng nhập thất bại</span>',
+        logout: '<span class="text-zinc-400">👋 Đăng xuất</span>',
+        key_activated: '<span class="text-cyan-400">🔑 Key kích hoạt</span>',
+      };
+      const tbody = document.getElementById('analyticsLogsBody');
+      tbody.innerHTML = logs.length
+        ? logs.map(l => `<tr class="hover:bg-zinc-800/30 transition-colors">
+            <td class="p-3">${evtMap[l.event]||l.event}</td>
+            <td class="p-3 font-mono text-xs text-cyan-300">${l.ip||'—'}</td>
+            <td class="p-3 text-xs text-zinc-500 max-w-[200px] truncate">${l.detail||'—'}</td>
+            <td class="p-3 text-xs text-zinc-400">${new Date(l.createdAt).toLocaleString('vi-VN')}</td>
+          </tr>`).join('')
+        : '<tr><td colspan="4" class="p-6 text-center text-zinc-600 text-xs">Chưa có lịch sử</td></tr>';
+    } catch(e) {}
+  }
+
+  // Xóa lịch sử
+  document.getElementById('clearLogsBtn')?.addEventListener('click', async () => {
+    if (!confirm('Xóa toàn bộ lịch sử hoạt động?')) return;
+    try {
+      const res = await fetch('/api/admin/admin-logs/clear', {method:'DELETE', credentials:'include'});
+      const data = await res.json();
+      showAdminToast(data.success ? '✅ Đã xóa lịch sử!' : '❌ '+data.message, data.success?'success':'error');
+      if (data.success) loadAnalytics();
+    } catch { showAdminToast('Lỗi!', 'error'); }
+  });
+
+  // ══ NOTIFICATIONS JS ══
+  let notifEditId = null;
+
+  async function loadNotifications() {
+    const tbody = document.getElementById('notifTableBody');
+    if (!tbody) return;
+    try {
+      const res = await fetch('/api/admin/notifications', {credentials:'include'});
+      const data = await res.json();
+      const list = data.notifications || [];
+      if (!list.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-zinc-600 text-xs">Chưa có thông báo nào</td></tr>';
+        return;
+      }
+      const typeMap = {info:'🔵 Info',success:'🟢 Success',warning:'🟡 Warning',danger:'🔴 Danger'};
+      tbody.innerHTML = list.map(n => `
+        <tr class="hover:bg-zinc-800/30 transition-colors">
+          <td class="p-3">
+            <div class="text-sm text-zinc-200 font-semibold">${n.title}</div>
+            <div class="text-xs text-zinc-500 mt-0.5 truncate max-w-[200px]">${n.message}</div>
+          </td>
+          <td class="p-3"><span class="text-xs">${typeMap[n.type]||n.type}</span></td>
+          <td class="p-3"><span class="px-2 py-1 rounded-lg text-xs font-bold ${n.isActive?'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30':'bg-red-500/15 text-red-400 border border-red-500/30'}">${n.isActive?'✅ Active':'🔴 Tắt'}</span></td>
+          <td class="p-3 text-xs text-zinc-500">${new Date(n.createdAt).toLocaleString('vi-VN')}</td>
+          <td class="p-3">
+            <div class="flex gap-2">
+              <button onclick="notifEdit('${n._id}')" class="action-btn reset text-xs px-3 py-1.5"><i class="fa-solid fa-pen"></i></button>
+              <button onclick="notifToggle('${n._id}',${!n.isActive})" class="action-btn toggle text-xs px-3 py-1.5">${n.isActive?'Tắt':'Bật'}</button>
+              <button onclick="notifDelete('${n._id}')" class="action-btn del text-xs px-3 py-1.5"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>`).join('');
+    } catch(e) {
+      document.getElementById('notifTableBody').innerHTML = '<tr><td colspan="5" class="p-4 text-center text-red-400 text-xs">Lỗi tải</td></tr>';
+    }
+  }
+
+  document.getElementById('btnAddNotif')?.addEventListener('click', () => {
+    notifEditId = null;
+    document.getElementById('notifFormTitle').textContent = 'Thêm Thông Báo Mới';
+    document.getElementById('notifTitle').value = '';
+    document.getElementById('notifMessage').value = '';
+    document.getElementById('notifType').value = 'info';
+    document.getElementById('notifActive').checked = true;
+    document.getElementById('notifForm').classList.remove('hidden');
+  });
+
+  document.getElementById('notifSaveBtn')?.addEventListener('click', async () => {
+    const title = document.getElementById('notifTitle').value.trim();
+    const message = document.getElementById('notifMessage').value.trim();
+    const type = document.getElementById('notifType').value;
+    const isActive = document.getElementById('notifActive').checked;
+    if (!title || !message) return showAdminToast('Điền đầy đủ tiêu đề và nội dung!', 'error');
+    const url = notifEditId ? `/api/admin/notifications/${notifEditId}` : '/api/admin/notifications';
+    const method = notifEditId ? 'PUT' : 'POST';
+    try {
+      const res = await fetch(url, {method, credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({title,message,type,isActive})});
+      const data = await res.json();
+      if (data.success) { showAdminToast(data.message, 'success'); document.getElementById('notifForm').classList.add('hidden'); loadNotifications(); }
+      else showAdminToast(data.message||'Lỗi!', 'error');
+    } catch { showAdminToast('Lỗi kết nối!', 'error'); }
+  });
+
+  window.notifEdit = async function(id) {
+    const res = await fetch('/api/admin/notifications', {credentials:'include'});
+    const data = await res.json();
+    const n = (data.notifications||[]).find(x=>x._id===id);
+    if (!n) return;
+    notifEditId = id;
+    document.getElementById('notifFormTitle').textContent = 'Sửa Thông Báo';
+    document.getElementById('notifTitle').value = n.title;
+    document.getElementById('notifMessage').value = n.message;
+    document.getElementById('notifType').value = n.type;
+    document.getElementById('notifActive').checked = n.isActive;
+    document.getElementById('notifForm').classList.remove('hidden');
+  };
+
+  window.notifToggle = async function(id, active) {
+    const res = await fetch(`/api/admin/notifications/${id}`, {method:'PUT', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({isActive:active})});
+    const data = await res.json();
+    if (data.success) { showAdminToast(active?'Đã bật!':'Đã tắt!', 'success'); loadNotifications(); }
+  };
+
+  window.notifDelete = async function(id) {
+    if (!confirm('Xóa thông báo này?')) return;
+    const res = await fetch(`/api/admin/notifications/${id}`, {method:'DELETE', credentials:'include'});
+    const data = await res.json();
+    if (data.success) { showAdminToast('Đã xóa!', 'success'); loadNotifications(); }
+  };
+
+  // ══ TELEGRAM CONFIG ══
+  (function() {
+    const saved = JSON.parse(localStorage.getItem('tgConfig')||'{}');
+    if (saved.token) document.getElementById('tgBotToken').value = saved.token;
+    if (saved.chatId) document.getElementById('tgChatId').value = saved.chatId;
+  })();
+
+  document.getElementById('saveTgConfig')?.addEventListener('click', async () => {
+    const token = document.getElementById('tgBotToken').value.trim();
+    const chatId = document.getElementById('tgChatId').value.trim();
+    if (!token || !chatId) return showAdminToast('Điền đủ Bot Token và Chat ID!', 'error');
+    try {
+      const res = await fetch('/api/admin/config', {
+        method:'PUT', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({telegramBotToken: token, telegramChatId: chatId})
+      });
+      const data = await res.json();
+      localStorage.setItem('tgConfig', JSON.stringify({token, chatId}));
+      showAdminToast(data.success ? '✅ Đã lưu Telegram!' : '❌ '+data.message, data.success?'success':'error');
+    } catch { showAdminToast('Lỗi kết nối!', 'error'); }
+  });
+
+  document.getElementById('testTgConfig')?.addEventListener('click', async () => {
+    const token = document.getElementById('tgBotToken').value.trim();
+    const chatId = document.getElementById('tgChatId').value.trim();
+    if (!token || !chatId) return showAdminToast('Điền đủ Bot Token và Chat ID trước!', 'error');
+    try {
+      const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({chat_id:chatId, text:'✅ Khang Huynh Cloud — Telegram kết nối thành công!', parse_mode:'HTML'})
+      });
+      const d = await r.json();
+      showAdminToast(d.ok ? '✅ Gửi test thành công!' : '❌ '+d.description, d.ok?'success':'error');
+    } catch { showAdminToast('Lỗi kết nối Telegram!', 'error'); }
+  });
+
   </script>
 </body>
 </html>
